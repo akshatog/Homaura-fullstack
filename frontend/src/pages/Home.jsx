@@ -397,7 +397,7 @@ export default function Home() {
           DM us for orders | Follow for ideas
         </motion.p>
         <motion.a
-          href="https://www.instagram.com/presento_treasure?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
+          href="https://www.instagram.com/akshat_sanghi_/"
           target="_blank"
           rel="noreferrer"
           className="btn-instagram"

@@ -146,7 +146,7 @@ export default function OrderTrackingModal({ isOpen, onClose }) {
                     disabled={updatingStatus !== null || order.status === "cancelled"}
                     className="btn-action btn-placed"
                   >
-                    ✓ Order Placed
+                    ✓ Order Confirmed
                   </button>
                   <button
                     onClick={() => handleUpdateStatus("ready")}

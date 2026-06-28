@@ -3,22 +3,22 @@ import "../styles/Contact.css";
 const contactLinks = [
   {
     label: "WhatsApp",
-    href: "https://wa.me/918955791761",
+    href: "https://wa.me/917322073770",
     type: "whatsapp",
   },
   {
     label: "Phone",
-    href: "tel:+918955791761",
+    href: "tel:+917322073770",
     type: "phone",
   },
   {
     label: "Email",
-    href: "mailto:adnan.ashar7869@gmail.com",
+    href: "mailto:akshatsanghi900@gmail.com",
     type: "email",
   },
   {
     label: "Instagram",
-    href: "https://www.instagram.com/presento_treasure?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==",
+    href: "https://www.instagram.com/akshat_sanghi_/",
     type: "instagram",
   },
 ];

@@ -32,6 +32,7 @@ transporter.verify()
         console.log('✅ Email system is ready to send emails');
         process.exit(0);
     })
+
     .catch((error) => {
         console.error('❌ SMTP connection failed:', error.message);
         console.error('\nTroubleshooting:');

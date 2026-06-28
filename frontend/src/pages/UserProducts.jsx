@@ -13,6 +13,7 @@ import SearchBar from "../components/SearchBar";
 import { searchProducts, saveSearchToHistory } from "../utils/searchUtils";
 import "./products.css";
 import "../styles/Filters.css";
+import "../styles/MyOrders.css";
 
 export default function UserProducts({ defaultTab = "products" }) {
   const [products, setProducts] = useState([]);
@@ -39,22 +40,22 @@ export default function UserProducts({ defaultTab = "products" }) {
   const contactLinks = [
     {
       label: "WhatsApp",
-      href: "https://wa.me/918955791761",
+      href: "https://wa.me/917322073770",
       type: "whatsapp",
     },
     {
       label: "Phone",
-      href: "tel:+918955791761",
+      href: "tel:+917322073770",
       type: "phone",
     },
     {
       label: "Email",
-      href: "mailto:adnan.ashar7869@gmail.com",
+      href: "mailto:akshatsanghi900@gmail.com",
       type: "email",
     },
     {
       label: "Instagram",
-      href: "https://www.instagram.com/presento_treasure?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==",
+      href: "https://www.instagram.com/akshat_sanghi_/",
       type: "instagram",
     },
   ];
@@ -519,158 +520,149 @@ export default function UserProducts({ defaultTab = "products" }) {
       )}
 
       {activeTab === "orders" && (
-        <div className="orders-container">
+        <div className="orders-page-wrapper">
+          <div className="orders-page-header">
+            <h2>📦 My Orders ({orders.length})</h2>
+            <p>Track and manage all your recent purchases</p>
+          </div>
+
           {orders.length === 0 ? (
-            <div className="no-products">
-              <p>No orders yet. Browse our products to get started!</p>
+            <div className="orders-empty">
+              <div className="empty-icon">📭</div>
+              <h3>No orders yet</h3>
+              <p>Browse our products and place your first order!</p>
             </div>
           ) : (
-            <div className="orders-list">
-              {orders.map((order) => (
-                <div key={order.id} className="order-card">
-                  <div className="order-header">
-                    <div className="order-info">
-                      <h3>Order #{order.id}</h3>
-                      <p className="order-date">
-                        {new Date(order.createdAt).toLocaleDateString("en-US", {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </p>
-                    </div>
-                    <div>
-                      <div
-                        className="order-status"
-                        style={{
-                          backgroundColor: getStatusColor(order.status),
-                          color: "white",
-                        }}
-                      >
-                        {order.status.toUpperCase().replace(/_/g, " ")}
+            <div className="orders-list-premium">
+              {orders.map((order) => {
+                const totalAmount = order.items?.reduce(
+                  (sum, item) => sum + (item.product?.price || 0) * item.quantity,
+                  0
+                );
+
+                const timelineSteps = [
+                  { key: "placed", label: "Confirmed", icon: "📋" },
+                  { key: "ready", label: "Ready", icon: "📦" },
+                  { key: "out_for_delivery", label: "On the Way", icon: "🚚" },
+                  { key: "delivered", label: "Delivered", icon: "✅" },
+                ];
+
+                const statusOrder = ["pending", "placed", "ready", "out_for_delivery", "delivered"];
+                const currentIndex = statusOrder.indexOf(order.status);
+
+                return (
+                  <div key={order.id} className="order-card-premium">
+                    {/* Top Bar */}
+                    <div className="order-card-topbar">
+                      <div>
+                        <div className="order-id">Order #{order.id}</div>
+                        <div className="order-date">
+                          {new Date(order.createdAt).toLocaleDateString("en-IN", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </div>
                       </div>
+                      <span
+                        className="order-status-badge"
+                        style={{ backgroundColor: getStatusColor(order.status) }}
+                      >
+                        {order.status.replace(/_/g, " ")}
+                      </span>
+                    </div>
+
+                    {/* Card Body */}
+                    <div className="order-card-body">
+
+                      {/* Items */}
+                      <div className="order-items-section">
+                        <h4>Items Ordered</h4>
+                        <div className="order-items-grid">
+                          {order.items?.map((item) => (
+                            <div key={item.id} className="order-item-row">
+                              <img
+                                src={item.product?.imageUrl}
+                                alt={item.product?.name || "Product"}
+                                loading="lazy"
+                                onError={(e) => { e.target.src = "/images/placeholder.png"; }}
+                              />
+                              <div className="order-item-info">
+                                <span className="order-item-name">{item.product?.name || "Unknown Product"}</span>
+                                <div className="order-item-sub">
+                                  <span className="order-item-qty">Qty: {item.quantity}</span>
+                                  <span className="order-item-price">₹{(item.product?.price || 0) * item.quantity}</span>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Order Total */}
+                      <div className="order-total-row">
+                        <span className="order-total-label">Order Total</span>
+                        <span className="order-total-amount">₹{totalAmount?.toLocaleString("en-IN")}</span>
+                      </div>
+
+                      {/* Estimated Delivery */}
                       {!["delivered", "cancelled"].includes(order.status) && (
-                        <p style={{
-                          fontSize: "13px",
-                          color: "#f97316",
-                          fontWeight: "600",
-                          marginTop: "8px",
-                          textAlign: "center"
-                        }}>
-                          ⏱️ Estimated Delivery: 5-8 days
-                        </p>
+                        <div className="order-delivery-info">
+                          ⏱️ Estimated Delivery: 5–8 business days
+                        </div>
+                      )}
+
+                      {/* Timeline */}
+                      {order.status !== "cancelled" ? (
+                        <div className="order-timeline-premium">
+                          {timelineSteps.map((step, idx) => {
+                            const stepIndex = statusOrder.indexOf(step.key);
+                            const isCompleted = currentIndex >= stepIndex;
+                            const isActive = currentIndex === stepIndex - 1 || (order.status === "pending" && idx === 0);
+                            return (
+                              <div
+                                key={step.key}
+                                className={`timeline-step ${
+                                  isCompleted ? "completed" : isActive ? "active" : ""
+                                }`}
+                              >
+                                <div className="timeline-step-dot">
+                                  {isCompleted ? "✓" : step.icon}
+                                </div>
+                                <div className="timeline-step-label">{step.label}</div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      ) : (
+                        <div className="order-cancelled-banner">
+                          ❌ This order has been cancelled
+                        </div>
+                      )}
+
+                      {/* Review Section */}
+                      {order.status === "delivered" && order.items?.length > 0 && (
+                        <div className="order-review-section-premium">
+                          <h4>Rate Your Purchase</h4>
+                          <div className="review-btns">
+                            {order.items.map((item) => (
+                              <button
+                                key={item.id}
+                                className="btn-review-premium"
+                                onClick={() => handleOpenReviewModal(item.product)}
+                              >
+                                ⭐ Rate {item.product?.name || "Product"}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
                       )}
                     </div>
                   </div>
-
-                  <div className="order-items">
-                    <h4>Items</h4>
-                    {order.items && order.items.length > 0 ? (
-                      <div className="items-summary">
-                        {order.items.map((item) => (
-                          <div key={item.id} className="item-summary">
-                            <img
-                              src={item.product?.imageUrl}
-                              alt={item.product?.name || "Product"}
-                              className="item-image"
-                              loading="lazy"
-                              style={{
-                                width: '80px',
-                                height: '80px',
-                                objectFit: 'cover',
-                                borderRadius: '8px',
-                                border: '1px solid #e5e7eb',
-                                flexShrink: 0
-                              }}
-                            />
-                            <div className="item-details">
-                              <span className="item-name">
-                                {item.product?.name || "Unknown Product"}
-                              </span>
-                              <div className="item-meta">
-                                <span className="item-qty">
-                                  Qty: <strong>{item.quantity}</strong>
-                                </span>
-                                <span className="item-price">
-                                  ₹{item.product?.price * item.quantity || 0}
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="no-items">No items in this order</p>
-                    )}
-                  </div>
-
-                  <div className="order-message">
-                    <p>{order.message}</p>
-                  </div>
-
-                  <div className="order-timeline">
-                    <div
-                      className={`timeline-item ${["placed", "ready", "out_for_delivery", "delivered"].includes(
-                        order.status
-                      )
-                        ? "completed"
-                        : ""
-                        }`}
-                    >
-                      <div className="timeline-dot">✓</div>
-                      <span>Placed</span>
-                    </div>
-                    <div
-                      className={`timeline-item ${["ready", "out_for_delivery", "delivered"].includes(
-                        order.status
-                      )
-                        ? "completed"
-                        : ""
-                        }`}
-                    >
-                      <div className="timeline-dot">✓</div>
-                      <span>Ready</span>
-                    </div>
-                    <div
-                      className={`timeline-item ${["out_for_delivery", "delivered"].includes(
-                        order.status
-                      )
-                        ? "completed"
-                        : ""
-                        }`}
-                    >
-                      <div className="timeline-dot">✓</div>
-                      <span>Out for Delivery</span>
-                    </div>
-                    <div
-                      className={`timeline-item ${order.status === "delivered" ? "completed" : ""
-                        }`}
-                    >
-                      <div className="timeline-dot">✓</div>
-                      <span>Delivered</span>
-                    </div>
-                  </div>
-
-                  {order.status === "delivered" && order.items && order.items.length > 0 && (
-                    <div className="order-review-section">
-                      <h4>Rate Your Purchase</h4>
-                      <div className="review-products">
-                        {order.items.map((item) => (
-                          <button
-                            key={item.id}
-                            className="btn-review"
-                            onClick={() => handleOpenReviewModal(item.product)}
-                          >
-                            ⭐ Rate {item.product?.name || 'Product'}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>

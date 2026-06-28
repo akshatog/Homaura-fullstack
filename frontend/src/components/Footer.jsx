@@ -25,7 +25,7 @@ export default function Footer() {
 
                 <div className="pt-footer__col">
                     <h4>Social</h4>
-                    <a href="https://instagram.com" target="_blank" rel="noreferrer">Instagram</a>
+                    <a href="https://www.instagram.com/akshat_sanghi_/" target="_blank" rel="noreferrer">Instagram</a>
                 </div>
             </div>
 

@@ -28,8 +28,8 @@ export default function Login() {
       localStorage.setItem('user', JSON.stringify(res.data.user));
       console.log('✅ Token stored:', res.data.token.substring(0, 20) + '...');
 
-      const ADMIN_EMAIL = 'ii@gmail.com';
-      const ADMIN_PASSWORD = '12345';
+      const ADMIN_EMAIL = 'admin@gmail.com';
+      const ADMIN_PASSWORD = 'admin123';
       const isAdmin = formData.email === ADMIN_EMAIL && formData.password === ADMIN_PASSWORD;
 
       console.log('👤 Admin check:', {

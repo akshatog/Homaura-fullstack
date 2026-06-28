@@ -16,7 +16,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'presentotreasure@gmail.com';
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'akshatsanghi900@gmail.com';
 const FROM_NAME = 'Presento Treasure';
 const FROM_EMAIL = process.env.EMAIL_USER;
 
@@ -216,10 +216,10 @@ const getEmailTemplate = (content) => {
         ${content}
         <div class="email-footer">
           <p><strong>Contact Us</strong></p>
-          <p>📞 +91 89557 91761 | 📧 presentotreasure@gmail.com</p>
+          <p>📞 +91 73220 73770 | 📧 akshatsanghi900@gmail.com</p>
           <div class="social-links">
             <a href="https://www.instagram.com/presento_treasure">Instagram</a> |
-            <a href="https://wa.me/918955791761">WhatsApp</a>
+            <a href="https://wa.me/917322073770">WhatsApp</a>
           </div>
           <p style="margin-top: 20px; font-size: 12px;">
             © ${new Date().getFullYear()} Presento Treasure. All rights reserved.

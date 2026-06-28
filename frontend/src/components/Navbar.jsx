@@ -97,7 +97,7 @@ export default function Navbar() {
           ))}
 
           <NavLinkWithAnimation to="/profile" end>
-            Profile (User Page)
+            My Account
           </NavLinkWithAnimation>
 
           <button className="pt-navbar__cart" onClick={() => navigate("/cart")}>
@@ -144,7 +144,7 @@ export default function Navbar() {
           ))}
 
           <NavLinkWithAnimation to="/profile" end onClick={closeMobileMenu}>
-            Profile (User Page)
+            My Account
           </NavLinkWithAnimation>
         </div>
 

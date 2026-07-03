@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useCart } from "../context/CartContext.jsx";
 import "../styles/ProductCardUser.css";
-import { optimizeImageUrl } from "../utils/imageUtils";
+import ProductImage from "./ProductImage";
+import { IMAGE_SIZES } from "../utils/imageUtils";
 
 const HeartIcon = ({ filled }) => (
   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill={filled ? "#5C6B47" : "none"} stroke={filled ? "#5C6B47" : "currentColor"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -49,11 +50,11 @@ function ProductCardUser({
         role="button"
         tabIndex={0}
       >
-        <img
-          src={optimizeImageUrl(product.imageUrl, 400)}
+        <ProductImage
+          product={product}
+          width={IMAGE_SIZES.card}
           alt={product.name}
           className="ha-product-image"
-          loading="lazy"
         />
         
         <button 

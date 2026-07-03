@@ -6,6 +6,7 @@ import adminMiddleware from "../middleware/adminMiddleware.js";
 import cloudinary from "../utils/cloudinary.js";
 import productMediaUpload from "../utils/productMediaUpload.js";
 import validateFileTypes from "../utils/validateFileTypes.js";
+import { normalizeProduct, normalizeProducts } from "../utils/normalizeProduct.js";
 
 const router = express.Router();
 
@@ -177,7 +178,7 @@ router.get("/", async (req, res) => {
     ]);
 
     res.json({
-      products,
+      products: normalizeProducts(products),
       pagination: {
         currentPage:     page,
         totalPages:      Math.ceil(totalProducts / limit),
@@ -201,7 +202,7 @@ router.get("/:id", async (req, res) => {
   try {
     const product = await prisma.product.findUnique({ where: { id } });
     if (!product) return res.status(404).json({ error: "Product not found" });
-    res.json(product);
+    res.json(normalizeProduct(product));
   } catch (err) {
     console.error("Fetch product error:", err);
     res.status(500).json({ error: "Internal server error" });

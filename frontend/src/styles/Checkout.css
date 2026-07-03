@@ -130,11 +130,15 @@
 }
 
 .checkout-item-main img {
-  width: 60px;
-  height: 60px;
+  width: 72px;
+  height: 72px;
+  aspect-ratio: 1 / 1;
   object-fit: cover;
-  border-radius: 10px;
+  object-position: center;
+  border-radius: 12px;
   flex-shrink: 0;
+  background: var(--gray-100);
+  border: 1px solid var(--color-border);
 }
 
 .checkout-item-main h3 {

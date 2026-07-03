@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../utils/api";
-import { optimizeImageUrl } from "../utils/imageUtils";
+import ProductImage from "./ProductImage";
+import { IMAGE_SIZES } from "../utils/imageUtils";
 import "../styles/ProductCardUser.css";
 
 function ProductCard({ product, onOrderClick, loading, isAdmin, onProductDeleted, onStockUpdated }) {
@@ -67,17 +68,17 @@ function ProductCard({ product, onOrderClick, loading, isAdmin, onProductDeleted
   return (
     <div className="ha-product-card">
       <div className="ha-product-image-wrapper">
-        <img
-          src={optimizeImageUrl(product.imageUrl, 400)}
+        <ProductImage
+          product={product}
+          width={IMAGE_SIZES.card}
           alt={product.name}
           className="ha-product-image"
-          loading="lazy"
         />
 
         {isOutOfStock ? (
           <div className="ha-product-badge out-of-stock">Sold Out</div>
         ) : (
-          <div className="ha-product-badge" style={{ background: 'var(--accent-sage)', color: 'white' }}>
+          <div className="ha-product-badge in-stock">
             Stock: {product.stock}
           </div>
         )}
@@ -88,12 +89,12 @@ function ProductCard({ product, onOrderClick, loading, isAdmin, onProductDeleted
         <span className="ha-product-price">₹ {product.price.toLocaleString("en-IN")}</span>
 
         {isAdmin && showStockInput && (
-          <div style={{ marginTop: '0.5rem', display: 'flex', gap: '0.5rem' }} onClick={(e) => e.stopPropagation()}>
+          <div className="admin-stock-row" onClick={(e) => e.stopPropagation()}>
             <input
               type="number"
               value={newStock}
               onChange={(e) => setNewStock(e.target.value)}
-              style={{ width: '80px', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--gray-300)' }}
+              className="admin-stock-input"
               min="0"
             />
             <button onClick={handleUpdateStock} className="ha-btn-pill ha-btn-solid" style={{ padding: '0.5rem 1rem' }}>
@@ -106,7 +107,7 @@ function ProductCard({ product, onOrderClick, loading, isAdmin, onProductDeleted
         )}
 
         {isAdmin && !showStockInput && (
-          <div className="ha-product-actions" style={{ marginTop: '1rem', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
+          <div className="ha-product-actions admin-actions-grid">
             <button
               type="button"
               className="ha-btn-pill ha-btn-outline"
@@ -120,8 +121,7 @@ function ProductCard({ product, onOrderClick, loading, isAdmin, onProductDeleted
             
             <button
               type="button"
-              className="ha-btn-pill ha-btn-outline"
-              style={{ color: 'var(--accent-red)', borderColor: 'var(--accent-red)' }}
+              className="ha-btn-pill ha-btn-danger"
               disabled={isDeleting}
               onClick={handleDeleteProduct}
             >
@@ -131,8 +131,7 @@ function ProductCard({ product, onOrderClick, loading, isAdmin, onProductDeleted
             {isOutOfStock && (
               <button
                 type="button"
-                className="ha-btn-pill ha-btn-solid"
-                style={{ gridColumn: '1 / -1' }}
+                className="ha-btn-pill ha-btn-solid full-width"
                 onClick={(e) => {
                   e.stopPropagation();
                   setShowStockInput(true);

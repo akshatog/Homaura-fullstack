@@ -9,6 +9,8 @@
   --color-primary: #5C6B47;       /* olive — main brand color */
   --color-primary-dark: #4A5638;  /* olive dark — hover states */
   --color-accent: #B5654A;        /* terracotta — sparing accents */
+  --accent-red: #C0392B;          /* destructive actions */
+  --accent-sage: #5C6B47;         /* stock / status badges */
   --color-card-bg: #FFFFFF;
   --color-border: rgba(58, 52, 43, 0.1);
 

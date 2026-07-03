@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { createPortal } from "react-dom";
 import "../styles/ProductGallery.css";
-import { optimizeImageUrl } from "../utils/imageUtils";
+import { parseProductImages, IMAGE_SIZES } from "../utils/imageUtils";
+import ProductImage from "./ProductImage";
 
 /**
  * ProductGallery
@@ -13,30 +14,12 @@ export default function ProductGallery({ product, className = "" }) {
   // Build the ordered list of media items
   const buildMedia = useCallback(() => {
     const items = [];
-
-    // Parse images JSON array first
-    let imageUrls = [];
-    if (product.images) {
-      try {
-        imageUrls = JSON.parse(product.images);
-      } catch {
-        imageUrls = [];
-      }
-    }
-    // Fallback to single imageUrl if no gallery
-    if (imageUrls.length === 0 && product.imageUrl) {
-      imageUrls = [product.imageUrl];
-    }
-
-    imageUrls.forEach((url) => {
-      if (url) items.push({ type: "image", url });
+    parseProductImages(product).forEach((url) => {
+      items.push({ type: "image", url });
     });
-
-    // Video goes at the end
     if (product.videoUrl) {
       items.push({ type: "video", url: product.videoUrl });
     }
-
     return items;
   }, [product]);
 
@@ -126,7 +109,20 @@ export default function ProductGallery({ product, className = "" }) {
     startAutoplay();
   };
 
-  if (media.length === 0) return null;
+  if (media.length === 0) {
+    return (
+      <div className={`pg-gallery ${className}`}>
+        <div className="pg-main-viewer">
+          <ProductImage
+            product={product}
+            width={IMAGE_SIZES.gallery}
+            alt="Product"
+            className="pg-main-image"
+          />
+        </div>
+      </div>
+    );
+  }
 
   const current = media[activeIdx] || media[0];
 
@@ -135,9 +131,10 @@ export default function ProductGallery({ product, className = "" }) {
       {/* ── Main viewer ─────────────────────────────────────────────────── */}
       <div className="pg-main-viewer">
         {current.type === "image" ? (
-          <img
+          <ProductImage
             key={current.url}
-            src={optimizeImageUrl(current.url, 1200)}
+            product={{ ...product, imageUrl: current.url }}
+            width={IMAGE_SIZES.gallery}
             alt="Product"
             className="pg-main-image pg-fade-in"
             onClick={() => openLightbox(activeIdx)}
@@ -182,7 +179,11 @@ export default function ProductGallery({ product, className = "" }) {
               aria-label={`View media ${i + 1}`}
             >
               {item.type === "image" ? (
-                <img src={optimizeImageUrl(item.url, 200)} alt={`Thumbnail ${i + 1}`} />
+                <ProductImage
+                  product={{ ...product, imageUrl: item.url }}
+                  width={IMAGE_SIZES.thumb}
+                  alt={`Thumbnail ${i + 1}`}
+                />
               ) : (
                 <span className="pg-thumb-video-icon">▶ Video</span>
               )}
@@ -224,8 +225,9 @@ export default function ProductGallery({ product, className = "" }) {
             )}
 
             {media[lightboxIdx]?.type === "image" ? (
-              <img
-                src={optimizeImageUrl(media[lightboxIdx].url, 1600)}
+              <ProductImage
+                product={{ ...product, imageUrl: media[lightboxIdx].url }}
+                width={IMAGE_SIZES.lightbox}
                 alt="Zoomed product"
                 className="pg-lightbox__image"
               />

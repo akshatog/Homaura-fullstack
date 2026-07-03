@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import api, { updateProduct } from '../utils/api';
 import '../styles/AddProductForm.css';
+import '../styles/Admin.css';
 
 const MAX_IMAGES = 5;
 
@@ -203,17 +204,23 @@ export default function EditProduct() {
     // ── Render ───────────────────────────────────────────────────────────────
     if (loading) {
         return (
-            <div className="add-product-form" style={{ textAlign: 'center', padding: '40px' }}>
-                <p>Loading product...</p>
+            <div className="admin-page">
+                <div className="admin-page__inner admin-loading">
+                    <div className="admin-spinner" />
+                    <span>Loading product...</span>
+                </div>
             </div>
         );
     }
 
     return (
-        <div className="add-product-form">
+        <div className="admin-page">
+            <div className="admin-form-page">
+                <div className="add-product-form">
             <div className="form-header">
                 <Link to="/admin/products" className="btn-back-link">← Back to Products</Link>
-                <h2>✏️ Edit Product</h2>
+                <span className="admin-eyebrow">HomAura Admin</span>
+                <h2>Edit Product</h2>
             </div>
 
             {error   && <div className="message-error">{error}</div>}
@@ -475,6 +482,8 @@ export default function EditProduct() {
                     </button>
                 </div>
             </form>
+                </div>
+            </div>
         </div>
     );
 }

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import api from "../utils/api";
+import ProductImage from "../components/ProductImage";
+import { IMAGE_SIZES } from "../utils/imageUtils";
 import "../styles/ProductModal.css";
 
 export default function ProductModal({ isOpen, productId, onClose, onOrderClick }) {
@@ -84,7 +86,7 @@ export default function ProductModal({ isOpen, productId, onClose, onOrderClick 
           <div className="product-modal-content">
             {}
             <div className="product-modal-image-wrapper">
-              <img src={product.imageUrl} alt={product.name} className="product-modal-image" />
+              <ProductImage product={product} width={IMAGE_SIZES.gallery} alt={product.name} className="product-modal-image" />
               <div className="product-modal-badge">
                 {product.stock > 0 ? "In Stock" : "Out of Stock"}
               </div>

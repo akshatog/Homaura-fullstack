@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import api from "../utils/api";
 import FAQ from "../components/FAQ";
-import { optimizeImageUrl } from "../utils/imageUtils";
+import ProductImage from "../components/ProductImage";
+import { IMAGE_SIZES } from "../utils/imageUtils";
 import "../styles/Home.css";
 
 // --- SVG Icons ---
@@ -230,10 +231,10 @@ export default function Home() {
                       tabIndex={0}
                     >
                       <div className="ha-category-card__image-wrapper">
-                        <img
-                          src={optimizeImageUrl(product.imageUrl, 400)}
+                        <ProductImage
+                          product={product}
+                          width={IMAGE_SIZES.card}
                           alt={product.name}
-                          loading="lazy"
                         />
                       </div>
                       <h3 className="ha-category-card__title">{product.name}</h3>

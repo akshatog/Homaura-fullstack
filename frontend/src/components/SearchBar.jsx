@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { debounce, getSuggestions, getSearchHistory, clearSearchHistory } from '../utils/searchUtils';
+import ProductImage from './ProductImage';
+import { IMAGE_SIZES } from '../utils/imageUtils';
 import './SearchBar.css';
 
 const SearchBar = ({ products, onSearch, onClear }) => {
@@ -159,13 +161,13 @@ const SearchBar = ({ products, onSearch, onClear }) => {
                                             key={index}
                                             className="suggestion-item"
                                             onClick={() => handleSuggestionClick(suggestion)}
-                                            whileHover={{ backgroundColor: '#fce7f3' }}
+                                            whileHover={{ backgroundColor: 'rgba(92, 107, 71, 0.06)' }}
                                             transition={{ duration: 0.2 }}
                                         >
                                             {suggestion.type === 'product' && suggestion.product && (
                                                 <>
                                                     <div className="suggestion-image">
-                                                        <img src={suggestion.product.imageUrl} alt={suggestion.text} />
+                                                        <ProductImage product={suggestion.product} width={IMAGE_SIZES.search} alt={suggestion.text} />
                                                     </div>
                                                     <div className="suggestion-content">
                                                         <div className="suggestion-text">{suggestion.text}</div>
@@ -203,7 +205,7 @@ const SearchBar = ({ products, onSearch, onClear }) => {
                                                 key={index}
                                                 className="history-item"
                                                 onClick={() => handleHistoryClick(item)}
-                                                whileHover={{ backgroundColor: '#fce7f3' }}
+                                                whileHover={{ backgroundColor: 'rgba(92, 107, 71, 0.06)' }}
                                                 transition={{ duration: 0.2 }}
                                             >
                                                 <div className="history-icon">
@@ -223,7 +225,7 @@ const SearchBar = ({ products, onSearch, onClear }) => {
                                                 </div>
                                                 {item.topProduct && (
                                                     <div className="history-image">
-                                                        <img src={item.topProduct.imageUrl} alt={item.query} />
+                                                        <ProductImage product={item.topProduct} width={IMAGE_SIZES.search} alt={item.query} />
                                                     </div>
                                                 )}
                                                 <div className="history-content">

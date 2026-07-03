@@ -1,0 +1,82 @@
+/* ════════════════════════════════════════
+   HomAura — Shared Product Image Styles
+   Consistent sizing, aspect ratios, and quality
+   ════════════════════════════════════════ */
+
+/* Square thumbnail — cart, checkout, orders, search */
+.ha-img-thumb {
+  width: var(--ha-thumb-size, 72px);
+  height: var(--ha-thumb-size, 72px);
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  object-position: center;
+  border-radius: var(--ha-thumb-radius, 12px);
+  display: block;
+  flex-shrink: 0;
+  background: var(--gray-100);
+  border: 1px solid var(--color-border);
+}
+
+.ha-img-thumb--sm {
+  --ha-thumb-size: 52px;
+  --ha-thumb-radius: 10px;
+}
+
+.ha-img-thumb--md {
+  --ha-thumb-size: 90px;
+}
+
+.ha-img-thumb--lg {
+  --ha-thumb-size: 120px;
+  --ha-thumb-radius: 14px;
+}
+
+/* Wrapper for contained product images (modals, previews) */
+.ha-img-contain-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: linear-gradient(145deg, var(--gray-100) 0%, #f5f2ed 100%);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ha-img-contain-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+/* Placeholder styling inside image wrappers */
+.ha-product-image-wrapper .ha-product-image[src*="product-placeholder"] {
+  object-fit: contain;
+  padding: 1.5rem;
+  background: linear-gradient(145deg, var(--gray-100) 0%, #f5f2ed 100%);
+}
+
+.pg-main-viewer .pg-main-image[src*="product-placeholder"] {
+  object-fit: contain;
+  padding: 2rem;
+}
+.ha-product-image-wrapper::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 70%,
+    rgba(58, 52, 43, 0.04) 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.ha-product-card:hover .ha-product-image-wrapper::after {
+  opacity: 1;
+}

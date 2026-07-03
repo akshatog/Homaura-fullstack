@@ -11,6 +11,8 @@ import { useOrders } from "../hooks/useOrders";
 import { useCart } from "../context/CartContext.jsx";
 import SearchBar from "../components/SearchBar";
 import { searchProducts, saveSearchToHistory } from "../utils/searchUtils";
+import ProductImage from "../components/ProductImage";
+import { IMAGE_SIZES } from "../utils/imageUtils";
 import "./products.css";
 import "../styles/Filters.css";
 import "../styles/MyOrders.css";
@@ -540,11 +542,10 @@ export default function UserProducts({ defaultTab = "products" }) {
                         <div className="order-items-grid">
                           {order.items?.map((item) => (
                             <div key={item.id} className="order-item-row">
-                              <img
-                                src={item.product?.imageUrl}
+                              <ProductImage
+                                item={item}
+                                width={IMAGE_SIZES.thumb}
                                 alt={item.product?.name || "Product"}
-                                loading="lazy"
-                                onError={(e) => { e.target.src = "/images/placeholder.png"; }}
                               />
                               <div className="order-item-info">
                                 <span className="order-item-name">{item.product?.name || "Unknown Product"}</span>

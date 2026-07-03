@@ -3,6 +3,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext.jsx";
 import { useOrders } from "../hooks/useOrders.js";
 import api from "../utils/api";
+import ProductImage from "../components/ProductImage";
+import { IMAGE_SIZES } from "../utils/imageUtils";
 import "../styles/Checkout.css";
 
 const emptyDetails = {
@@ -260,7 +262,7 @@ export default function Checkout() {
               {selectedItems.map((item) => (
                 <div key={item.id} className="checkout-item">
                   <div className="checkout-item-main">
-                    <img src={item.imageUrl} alt={item.name} />
+                    <ProductImage item={item} width={IMAGE_SIZES.checkout} alt={item.name} />
                     <div>
                       <h3>{item.name}</h3>
                       <p className="checkout-item-meta">

@@ -174,10 +174,14 @@
 .cart-item img {
   width: 90px;
   height: 90px;
+  aspect-ratio: 1 / 1;
   object-fit: cover;
+  object-position: center;
   border-radius: 12px;
   display: block;
   flex-shrink: 0;
+  background: var(--gray-100);
+  border: 1px solid var(--color-border);
 }
 
 /* Item info */

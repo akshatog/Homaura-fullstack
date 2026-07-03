@@ -23,7 +23,7 @@ export default function ProductDetails() {
   const navigate = useNavigate();
   const location = useLocation();
   const { addToCart } = useCart();
-  const [product, setProduct] = useState(null);
+  const [product, setProduct] = useState(location.state?.product || null);
   const [reviews, setReviews] = useState([]);
   const [averageRating, setAverageRating] = useState(0);
   const [totalReviews, setTotalReviews] = useState(0);
@@ -31,7 +31,7 @@ export default function ProductDetails() {
   const [hasReviewed, setHasReviewed] = useState(false);
   const [existingReview, setExistingReview] = useState(null);
   const [showReviewModal, setShowReviewModal] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!location.state?.product);
   const [error, setError] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [addedToCart, setAddedToCart] = useState(false);
@@ -41,18 +41,18 @@ export default function ProductDetails() {
   const user = JSON.parse(localStorage.getItem("user") || "{}");
 
   const fetchProduct = useCallback(async () => {
-    setLoading(true);
+    if (!location.state?.product) setLoading(true);
     setError("");
     try {
       const { data } = await api.get(`/products/${id}`);
       setProduct(data);
     } catch (err) {
       console.error("Product fetch error:", err);
-      setError("Unable to load product.");
+      if (!location.state?.product) setError("Unable to load product.");
     } finally {
-      setLoading(false);
+      if (!location.state?.product) setLoading(false);
     }
-  }, [id]);
+  }, [id, location.state]);
 
   const fetchReviews = useCallback(async () => {
     try {
@@ -191,17 +191,14 @@ export default function ProductDetails() {
       animate="animate"
       exit="exit"
     >
-      <motion.button
-        className="btn-ghost back-btn"
-        onClick={() => navigate("/shop")}
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.4 }}
-        whileHover={{ x: -5 }}
-        whileTap={{ scale: 0.95 }}
-      >
-        ← Back to shop
-      </motion.button>
+      {/* Breadcrumb matching HomAura design system */}
+      <div className="ha-products-breadcrumb" style={{ padding: '0 0 2rem 0', display: 'flex', gap: '0.5rem', alignItems: 'center', fontSize: '0.9rem', color: 'var(--gray-500)', fontFamily: 'var(--font-body)' }}>
+        <span style={{ cursor: 'pointer', transition: 'color 0.2s' }} onClick={() => navigate('/')}>Home</span>
+        <span>/</span>
+        <span style={{ cursor: 'pointer', transition: 'color 0.2s' }} onClick={() => navigate('/shop')}>Shop</span>
+        <span>/</span>
+        <span style={{ color: 'var(--color-primary)' }}>{product.name}</span>
+      </div>
 
       <motion.div
         className="product-details-card"

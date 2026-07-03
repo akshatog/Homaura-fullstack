@@ -1,97 +1,251 @@
-.pt-footer {
-  background: linear-gradient(180deg, #fff 0%, #fff1f2 100%);
-  border-top: 1px solid rgba(236, 72, 153, 0.1);
-  padding: 4rem 0 2rem;
-  position: relative;
-  overflow: hidden;
+/* ══════════════════════════════════════════════
+   HomAura Footer — Footer.css
+   ══════════════════════════════════════════════ */
+
+/* ── Olive value band (matches every reference image bottom) ── */
+.ha-footer__value-band {
+  background: #4A5638;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
 }
 
-.pt-footer__content {
+.ha-footer__value-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.75rem 2.5rem;
+  flex: 1;
+  max-width: 320px;
+}
+
+.ha-footer__value-icon {
+  color: rgba(255, 255, 255, 0.75);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.ha-footer__value-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.ha-footer__value-label {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.9);
+  text-transform: uppercase;
+}
+
+.ha-footer__value-desc {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.55);
+  font-weight: 400;
+}
+
+.ha-footer__value-divider {
+  width: 1px;
+  background: rgba(255, 255, 255, 0.12);
+  margin: 1.25rem 0;
+  flex-shrink: 0;
+}
+
+/* ── Main footer body ── */
+.ha-footer__body {
+  background: var(--gray-900);
+  padding: 4rem 0 3rem;
+}
+
+.ha-footer__inner {
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: 0 2rem;
   display: grid;
   grid-template-columns: 2fr 1fr 1fr 1fr;
   gap: 3rem;
-  margin-bottom: 3rem;
-  position: relative;
-  z-index: 1;
 }
 
-.pt-footer__brand h3 {
-  font-family: var(--font-heading);
-  font-size: 1.75rem;
-  background: var(--gradient-text);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  margin-bottom: 1rem;
-}
-
-.pt-footer__brand p {
-  font-size: 1rem;
-  color: var(--gray-500);
-  line-height: 1.6;
-  max-width: 300px;
-}
-
-.pt-footer__col {
+/* Brand column */
+.ha-footer__brand {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1rem;
 }
 
-.pt-footer__col h4 {
-  color: var(--gray-900);
-  font-size: 1.1rem;
-  margin-bottom: 0.5rem;
-  font-weight: 600;
+.ha-footer__brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
 }
 
-.pt-footer__col a {
-  color: var(--gray-600);
-  font-size: 0.95rem;
-  transition: all 0.2s ease;
-  width: fit-content;
+.ha-footer__leaf {
+  width: 28px;
+  height: 34px;
 }
 
-.pt-footer__col a:hover {
-  color: var(--primary-pink);
-  transform: translateX(4px);
+.ha-footer__brand-name {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.01em;
 }
 
-.pt-footer__bottom {
-  padding-top: 2rem;
-  border-top: 1px solid rgba(236, 72, 153, 0.1);
-  text-align: center;
-}
-
-.pt-footer__bottom p {
-  color: var(--gray-400);
+.ha-footer__brand-desc {
+  font-family: var(--font-body);
   font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.45);
+  line-height: 1.7;
+  max-width: 280px;
   margin: 0;
 }
 
-@media (max-width: 1024px) {
-  .pt-footer__content {
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-  }
+.ha-footer__social {
+  display: flex;
+  gap: 0.625rem;
+  margin-top: 0.5rem;
 }
 
-@media (max-width: 640px) {
-  .pt-footer__content {
-    grid-template-columns: 1fr;
-    text-align: center;
+.ha-footer__social-link {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.ha-footer__social-link:hover {
+  border-color: rgba(255, 255, 255, 0.35);
+  color: white;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* Link columns */
+.ha-footer__col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.ha-footer__col-heading {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+  margin-bottom: 0.25rem;
+}
+
+.ha-footer__col a {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+  transition: color 0.2s ease;
+  width: fit-content;
+}
+
+.ha-footer__col a:hover {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+/* ── Bottom bar ── */
+.ha-footer__bottom {
+  background: var(--gray-900);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 1.25rem 0;
+}
+
+.ha-footer__bottom-inner {
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.ha-footer__bottom p {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.3);
+  margin: 0;
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .ha-footer__inner {
+    grid-template-columns: 1fr 1fr;
     gap: 2.5rem;
   }
 
-  .pt-footer__brand p {
-    margin: 0 auto;
+  .ha-footer__brand {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 2rem;
   }
 
-  .pt-footer__col {
-    align-items: center;
+  .ha-footer__brand-desc {
+    max-width: 400px;
+  }
+}
+
+@media (max-width: 768px) {
+  .ha-footer__value-band {
+    flex-wrap: wrap;
   }
 
-  .pt-footer {
-    padding: 3rem 1.5rem 1.5rem;
+  .ha-footer__value-item {
+    flex: 1 1 45%;
+    max-width: 50%;
+    padding: 1.25rem 1.5rem;
+  }
+
+  .ha-footer__value-divider {
+    display: none;
+  }
+
+  .ha-footer__inner {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+
+  .ha-footer__brand {
+    grid-column: 1 / -1;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .ha-footer__value-item {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+
+  .ha-footer__inner {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .ha-footer__body {
+    padding: 2.5rem 0 2rem;
+  }
+
+  .ha-footer__bottom-inner {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
   }
 }

@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
+import { createPortal } from "react-dom";
 import "../styles/ProductGallery.css";
 import { optimizeImageUrl } from "../utils/imageUtils";
 
@@ -56,6 +57,7 @@ export default function ProductGallery({ product, className = "" }) {
     if (autoplayRef.current) clearInterval(autoplayRef.current);
     autoplayRef.current = setInterval(() => {
       setActiveIdx((prev) => {
+        if (media[prev]?.type === "video") return prev; // Do not interrupt video
         const imageCount = media.filter((m) => m.type === "image").length;
         const next = (prev + 1) % (imageCount > 0 ? imageCount : media.length);
         return next;
@@ -125,6 +127,8 @@ export default function ProductGallery({ product, className = "" }) {
             src={current.url}
             className="pg-main-video"
             controls
+            autoPlay
+            muted
             playsInline
           />
         )}
@@ -180,7 +184,7 @@ export default function ProductGallery({ product, className = "" }) {
       )}
 
       {/* ── Lightbox ────────────────────────────────────────────────────── */}
-      {lightboxOpen && (
+      {lightboxOpen && createPortal(
         <div className="pg-lightbox" onClick={closeLightbox}>
           <div
             className="pg-lightbox__content"
@@ -226,7 +230,8 @@ export default function ProductGallery({ product, className = "" }) {
               {lightboxIdx + 1} / {media.length}
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

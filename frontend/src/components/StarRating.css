@@ -1,48 +1,42 @@
+/* ══════════════════════════════════════════════
+   HomAura StarRating — StarRating.css
+   ══════════════════════════════════════════════ */
+
 .star-rating {
-    display: inline-flex;
-    gap: 0.25rem;
-    align-items: center;
+  display: inline-flex;
+  gap: 0.2rem;
+  align-items: center;
 }
 
 .star {
-    transition: all 0.2s ease;
-    cursor: default;
+  transition: transform 0.15s ease, color 0.15s ease;
+  cursor: default;
+  line-height: 1;
 }
 
 .star-rating-interactive .star {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .star-rating-interactive .star:hover {
-    transform: scale(1.2);
+  transform: scale(1.25);
 }
 
 .star-filled {
-    color: #fbbf24;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  color: #D4A843;
 }
 
 .star-partial {
-    color: #fbbf24;
-    opacity: 0.5;
+  color: #D4A843;
+  opacity: 0.5;
 }
 
 .star-empty {
-    color: #d1d5db;
+  color: var(--gray-300);
 }
 
-.star-rating-small .star {
-    font-size: 1rem;
-}
-
-.star-rating-medium .star {
-    font-size: 1.25rem;
-}
-
-.star-rating-large .star {
-    font-size: 1.75rem;
-}
-
-.star-rating-xlarge .star {
-    font-size: 2.5rem;
-}
+/* Size variants */
+.star-rating-small .star  { font-size: 0.875rem; }
+.star-rating-medium .star { font-size: 1.1rem; }
+.star-rating-large .star  { font-size: 1.5rem; }
+.star-rating-xlarge .star { font-size: 2.25rem; }

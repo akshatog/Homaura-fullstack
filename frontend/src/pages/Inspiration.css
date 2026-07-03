@@ -1,0 +1,209 @@
+/* ══════════════════════════════════════════════
+   HomAura Inspiration — Inspiration.css
+   ══════════════════════════════════════════════ */
+
+.ha-inspo {
+  background: var(--color-background);
+  min-height: 100vh;
+  padding-bottom: 5rem;
+}
+
+/* Breadcrumb */
+.ha-inspo__breadcrumb {
+  border-bottom: 1px solid var(--color-border);
+  padding: 1.25rem 0;
+}
+
+.ha-inspo__breadcrumb-inner {
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--gray-500);
+}
+
+.ha-inspo__breadcrumb-inner a {
+  color: var(--gray-500);
+  text-decoration: none;
+}
+
+.ha-inspo__breadcrumb-inner a:hover {
+  color: var(--color-primary);
+}
+
+/* Header */
+.ha-inspo__header {
+  padding: 3.5rem 0 2rem;
+}
+
+.ha-inspo__header-inner {
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.ha-inspo__eyebrow {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  margin-bottom: 0.75rem;
+}
+
+.ha-inspo__title {
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 0.75rem;
+  line-height: 1.15;
+}
+
+.ha-inspo__subtitle {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--gray-600);
+  max-width: 420px;
+  line-height: 1.65;
+  margin-bottom: 2rem;
+}
+
+/* Filter tabs */
+.ha-inspo__tabs {
+  display: flex;
+  gap: 0.625rem;
+  flex-wrap: wrap;
+}
+
+.ha-inspo__tab {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.5rem 1.25rem;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--gray-600);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ha-inspo__tab:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.ha-inspo__tab.is-active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: white;
+}
+
+/* Gallery */
+.ha-inspo__gallery {
+  padding: 2rem 0;
+}
+
+.ha-inspo__gallery-inner {
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* 3-column grid matching reference layout */
+.ha-inspo__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: 260px;
+  gap: 1rem;
+}
+
+/* Card base */
+.ha-inspo__card {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+/* Image */
+.ha-inspo__card-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.ha-inspo__card:hover .ha-inspo__card-img {
+  transform: scale(1.03);
+}
+
+/* Overlay */
+.ha-inspo__card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(30, 24, 18, 0.75) 0%, transparent 55%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1.5rem;
+  gap: 0.35rem;
+}
+
+.ha-inspo__card-title {
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: white;
+  line-height: 1.2;
+}
+
+.ha-inspo__card-cta {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.75);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.ha-inspo__card-cta:hover {
+  color: white;
+}
+
+/* Size modifiers matching reference */
+.ha-inspo__card--large {
+  grid-row: span 2;
+}
+
+.ha-inspo__card--tall {
+  grid-row: span 2;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .ha-inspo__grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 240px;
+  }
+}
+
+@media (max-width: 640px) {
+  .ha-inspo__grid {
+    grid-template-columns: 1fr;
+    grid-auto-rows: 220px;
+  }
+
+  .ha-inspo__card--large,
+  .ha-inspo__card--tall {
+    grid-row: span 1;
+  }
+}

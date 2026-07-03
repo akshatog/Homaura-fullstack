@@ -1,8 +1,13 @@
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useState } from "react";
 import { useCart } from "../context/CartContext.jsx";
 import "../styles/ProductCardUser.css";
 import { optimizeImageUrl } from "../utils/imageUtils";
+
+const HeartIcon = ({ filled }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill={filled ? "#5C6B47" : "none"} stroke={filled ? "#5C6B47" : "currentColor"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+  </svg>
+);
 
 function ProductCardUser({
   product,
@@ -11,13 +16,9 @@ function ProductCardUser({
   onViewDetails = () => { },
 }) {
   const { items, updateQuantity, removeFromCart } = useCart();
+  const [isWishlisted, setIsWishlisted] = useState(false); // Visual toggle for mockup matching
 
   const cartItem = items.find(item => item.id === product.id);
-
-  const shortDescription =
-    product.description?.length > 90
-      ? `${product.description.slice(0, 87)}…`
-      : product.description || "Pastel-perfect keepsakes for heartfelt gifting.";
 
   const handleIncrement = () => {
     if (cartItem && cartItem.quantity < product.stock) {
@@ -35,124 +36,84 @@ function ProductCardUser({
     }
   };
 
+  const toggleWishlist = (e) => {
+    e.stopPropagation();
+    setIsWishlisted(!isWishlisted);
+  };
+
   return (
-    <motion.div
-      className="product-card-user"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
-      whileHover={{ y: -8, transition: { duration: 0.3 } }}
-    >
-      <motion.button
-        type="button"
-        className="product-image-wrapper"
+    <div className="ha-product-card">
+      <div
+        className="ha-product-image-wrapper"
         onClick={() => onProductClick(product.id)}
-        whileHover="hover"
-        initial="rest"
+        role="button"
+        tabIndex={0}
       >
-        <motion.img
+        <img
           src={optimizeImageUrl(product.imageUrl, 400)}
           alt={product.name}
-          className="product-image"
+          className="ha-product-image"
           loading="lazy"
-          variants={{
-            rest: { scale: 1 },
-            hover: { scale: 1.1 }
-          }}
-          transition={{ duration: 0.4 }}
         />
-        {product.badge && (
-          <motion.div
-            className="product-tag-badge"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.1 }}
-          >
-            {product.badge}
-          </motion.div>
-        )}
-        <motion.div
-          className={`product-badge ${product.stock > 0 ? "in-stock" : "out-of-stock"}`}
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.2 }}
+        
+        <button 
+          className="ha-product-wishlist-btn" 
+          onClick={toggleWishlist}
+          aria-label="Toggle wishlist"
         >
-          {product.stock > 0 ? "In Stock" : "Sold Out"}
-        </motion.div>
-      </motion.button>
+          <HeartIcon filled={isWishlisted} />
+        </button>
 
-      <div className="product-card-content">
-        <h3 className="product-name">{product.name}</h3>
-        <p className="product-description">{shortDescription}</p>
-        <div className="product-meta-row">
-          <span className="product-price">₹{product.price}</span>
-          <span className="product-stock-label">
-            {product.stock > 0 ? `${product.stock} left` : "Sold out"}
-          </span>
-        </div>
+        {product.stock === 0 && (
+          <div className="ha-product-badge out-of-stock">Sold Out</div>
+        )}
+      </div>
 
-        <div className="product-card-actions">
-          <motion.button
+      <div className="ha-product-info">
+        <h3 className="ha-product-name">{product.name}</h3>
+        <span className="ha-product-price">₹ {product.price.toLocaleString("en-IN")}</span>
+
+        <div className="ha-product-actions">
+          <button
             type="button"
-            className="btn-outline"
-            onClick={() => onViewDetails(product.id)}
-            whileHover={{ scale: 1.05, y: -2 }}
-            whileTap={{ scale: 0.95 }}
+            className="ha-btn-pill ha-btn-outline"
+            onClick={(e) => {
+              e.stopPropagation();
+              onViewDetails(product.id);
+            }}
           >
-            View Details
-          </motion.button>
+            Details
+          </button>
 
           {cartItem ? (
-            <motion.div
-              className="quantity-selector-inline"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.3 }}
-            >
-              <motion.button
-                className="quantity-btn-inline"
-                onClick={handleDecrement}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-              >
-                −
-              </motion.button>
-              <motion.span
-                className="quantity-value-inline"
-                key={cartItem.quantity}
-                initial={{ scale: 1.2 }}
-                animate={{ scale: 1 }}
-                transition={{ duration: 0.2 }}
-              >
-                {cartItem.quantity}
-              </motion.span>
-              <motion.button
-                className="quantity-btn-inline"
+            <div className="ha-quantity-selector" onClick={(e) => e.stopPropagation()}>
+              <button className="ha-qty-btn" onClick={handleDecrement}>−</button>
+              <span className="ha-qty-val">{cartItem.quantity}</span>
+              <button
+                className="ha-qty-btn"
                 onClick={handleIncrement}
                 disabled={cartItem.quantity >= product.stock}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
               >
                 +
-              </motion.button>
-            </motion.div>
+              </button>
+            </div>
           ) : (
-            <motion.button
+            <button
               type="button"
-              className="btn-solid"
+              className="ha-btn-pill ha-btn-solid"
               disabled={product.stock === 0}
-              onClick={() => onAddToCart(product)}
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
+              onClick={(e) => {
+                e.stopPropagation();
+                onAddToCart(product);
+              }}
             >
               Add to Cart
-            </motion.button>
+            </button>
           )}
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
 export default React.memo(ProductCardUser);
-

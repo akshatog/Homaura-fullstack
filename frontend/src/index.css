@@ -3,47 +3,53 @@
 
 :root {
 
-  --primary-pink: #ec4899;
+  /* ── HomAura Brand Palette ── */
+  --color-background: #F5F0E8;   /* cream page bg */
+  --color-text: #3A342B;          /* charcoal default text */
+  --color-primary: #5C6B47;       /* olive — main brand color */
+  --color-primary-dark: #4A5638;  /* olive dark — hover states */
+  --color-accent: #B5654A;        /* terracotta — sparing accents */
+  --color-card-bg: #FFFFFF;
+  --color-border: rgba(58, 52, 43, 0.1);
 
-  --primary-hover: #db2777;
+  /* ── Remapped from old pink variables (keep names, change values) ── */
+  --primary-pink: #5C6B47;        /* was #ec4899 — now olive */
+  --primary-hover: #4A5638;       /* was #db2777 — now olive dark */
+  --accent-pink: #B5654A;         /* was #be185d — now terracotta */
+  --secondary-pink: #E8EDE3;      /* was #fbcfe8 — now light olive tint */
 
-  --secondary-pink: #fbcfe8;
+  --bg-pink-soft: #FAF7F2;        /* was #fdf2f8 — now warm cream white */
+  --bg-pink-rich: #F0EAE0;        /* was #fce7f3 — now deeper cream */
 
-  --accent-pink: #be185d;
+  --gradient-main: linear-gradient(135deg, #F5F0E8 0%, #F0EAE0 50%, #E8EDE3 100%);
+  --gradient-card: linear-gradient(145deg, #ffffff, #FAFAF8);
+  --gradient-card-hover: linear-gradient(145deg, #FAF7F2, #F0EAE0);
+  --gradient-text: linear-gradient(135deg, #3A342B, #5C6B47);  /* charcoal → olive */
+  --gradient-primary: linear-gradient(135deg, #5C6B47, #4A5638); /* olive gradient */
 
-  --bg-pink-soft: #fdf2f8;
-
-  --bg-pink-rich: #fce7f3;
-
-  --gradient-main: linear-gradient(135deg, #fff1f2 0%, #fce7f3 50%, #fbcfe8 100%);
-  --gradient-card: linear-gradient(145deg, #ffffff, #fff5f7);
-  --gradient-card-hover: linear-gradient(145deg, #fff0f5, #ffe4e9);
-  --gradient-text: linear-gradient(135deg, #831843, #db2777);
-  --gradient-primary: linear-gradient(135deg, #ec4899, #be185d);
-
-  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-bg: rgba(255, 255, 255, 0.75);
   --glass-border: rgba(255, 255, 255, 0.6);
-  --glass-shadow: 0 8px 32px 0 rgba(236, 72, 153, 0.1);
+  --glass-shadow: 0 8px 32px 0 rgba(92, 107, 71, 0.08);
 
-  --shadow-sm: 0 2px 8px rgba(236, 72, 153, 0.08);
-  --shadow-md: 0 8px 24px rgba(236, 72, 153, 0.12);
-  --shadow-lg: 0 16px 32px rgba(236, 72, 153, 0.15);
-  --shadow-xl: 0 24px 48px rgba(236, 72, 153, 0.2);
-  --shadow-inner: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 2px 8px rgba(58, 52, 43, 0.06);
+  --shadow-md: 0 8px 24px rgba(58, 52, 43, 0.09);
+  --shadow-lg: 0 16px 32px rgba(58, 52, 43, 0.12);
+  --shadow-xl: 0 24px 48px rgba(58, 52, 43, 0.15);
+  --shadow-inner: inset 0 2px 4px rgba(0, 0, 0, 0.04);
 
   --white: #ffffff;
-  --gray-50: #fdfbfb;
+  --gray-50: #FAF7F2;   /* remapped to warm cream tint */
 
-  --gray-100: #f8f5f6;
+  --gray-100: #F0EAE0;  /* remapped to light cream */
 
-  --gray-200: #e5e7eb;
-  --gray-300: #d1d5db;
-  --gray-400: #9ca3af;
-  --gray-500: #6b7280;
-  --gray-600: #4b5563;
-  --gray-700: #374151;
-  --gray-800: #1f2937;
-  --gray-900: #111827;
+  --gray-200: #E0D9CF;
+  --gray-300: #C8BFB3;
+  --gray-400: #A89E92;
+  --gray-500: #7A7168;
+  --gray-600: #5C5449;
+  --gray-700: #3A342B;  /* charcoal */
+  --gray-800: #2A2520;
+  --gray-900: #1A1612;
 
   --font-heading: 'Playfair Display', serif;
   --font-body: 'Inter', sans-serif;
@@ -72,17 +78,17 @@ video {
 
 body {
   font-family: var(--font-body);
-  background-color: var(--gray-50);
+  background-color: var(--color-background);
   background-image:
-    radial-gradient(circle at 10% 20%, rgba(251, 207, 232, 0.3) 0%, transparent 40%),
-    radial-gradient(circle at 90% 80%, rgba(236, 72, 153, 0.1) 0%, transparent 40%);
+    radial-gradient(circle at 10% 20%, rgba(92, 107, 71, 0.06) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(181, 101, 74, 0.05) 0%, transparent 40%);
   background-attachment: fixed;
-  color: var(--gray-800);
+  color: var(--color-text);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
-  -webkit-tap-highlight-color: rgba(236, 72, 153, 0.2);
+  -webkit-tap-highlight-color: rgba(92, 107, 71, 0.15);
   touch-action: manipulation;
 }
 
@@ -205,7 +211,8 @@ a {
   transform: translateY(-2px);
 }
 
-input,
+/* Scoped global form styles — excludes checkboxes, radios, range sliders */
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
 select,
 textarea {
   width: 100%;
@@ -219,12 +226,12 @@ textarea {
   box-shadow: var(--shadow-inner);
 }
 
-input:focus,
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):focus,
 select:focus,
 textarea:focus {
   outline: none;
-  border-color: var(--primary-pink);
-  box-shadow: 0 0 0 4px rgba(236, 72, 153, 0.15);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(92, 107, 71, 0.12);
   background-color: white;
 }
 
@@ -338,7 +345,7 @@ textarea:focus {
     letter-spacing: 0.01em;
   }
 
-  input,
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
   select,
   textarea {
     padding: 0.75rem 0.875rem;
@@ -366,7 +373,7 @@ textarea:focus {
     font-size: 0.85rem;
   }
 
-  input,
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
   select,
   textarea {
     padding: 0.65rem 0.75rem;

@@ -1,0 +1,253 @@
+/* ══════════════════════════════════════════════
+   HomAura About Us — AboutUs.css
+   ══════════════════════════════════════════════ */
+
+.ha-about {
+  background: var(--color-background);
+  min-height: 100vh;
+}
+
+/* Breadcrumb */
+.ha-about__breadcrumb {
+  border-bottom: 1px solid var(--color-border);
+  padding: 1.25rem 0;
+}
+
+.ha-about__breadcrumb-inner {
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--gray-500);
+}
+
+.ha-about__breadcrumb-inner a {
+  color: var(--gray-500);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.ha-about__breadcrumb-inner a:hover {
+  color: var(--color-primary);
+}
+
+/* Story section */
+.ha-about__story {
+  padding: 4rem 0 2.5rem;
+}
+
+.ha-about__story-inner {
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: 0 2rem;
+  max-width: 720px;
+}
+
+.ha-about__eyebrow {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  margin-bottom: 1rem;
+}
+
+.ha-about__eyebrow--center {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.ha-about__title {
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1.15;
+  margin-bottom: 1.5rem;
+}
+
+.ha-about__lead {
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  color: var(--gray-600);
+  line-height: 1.75;
+  margin-bottom: 0;
+}
+
+/* Hero image */
+.ha-about__hero-img {
+  width: 100%;
+  margin: 0;
+}
+
+.ha-about__hero-img img {
+  width: 100%;
+  max-height: 600px;
+  object-fit: cover;
+  display: block;
+}
+
+/* Values section */
+.ha-about__values {
+  padding: 5rem 0;
+  background: var(--color-background);
+}
+
+.ha-about__values-inner {
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.ha-about__values-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--color-card-bg);
+}
+
+.ha-about__value-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 3rem 2rem;
+  border-right: 1px solid var(--color-border);
+}
+
+.ha-about__value-card:last-child {
+  border-right: none;
+}
+
+.ha-about__value-icon {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text);
+  margin-bottom: 1.25rem;
+  opacity: 0.7;
+}
+
+.ha-about__value-title {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 0.75rem;
+}
+
+.ha-about__value-desc {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--gray-500);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Mission band */
+.ha-about__mission {
+  background: #4A5638;
+  padding: 5rem 2rem;
+}
+
+.ha-about__mission-inner {
+  max-width: 960px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3rem;
+}
+
+.ha-about__mission-text {
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  color: white;
+  line-height: 1.4;
+  margin: 0;
+  max-width: 520px;
+}
+
+.ha-about__mission-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 1rem 2rem;
+  background: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.55);
+  color: white;
+  border-radius: var(--radius-full);
+  text-decoration: none;
+  transition: all 0.25s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.ha-about__mission-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.85);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .ha-about__values-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .ha-about__value-card:nth-child(2) {
+    border-right: none;
+  }
+
+  .ha-about__value-card:nth-child(1),
+  .ha-about__value-card:nth-child(2) {
+    border-bottom: 1px solid var(--color-border);
+  }
+}
+
+@media (max-width: 768px) {
+  .ha-about__story-inner {
+    max-width: 100%;
+  }
+
+  .ha-about__hero-img img {
+    max-height: 300px;
+  }
+
+  .ha-about__mission-inner {
+    flex-direction: column;
+    text-align: center;
+    gap: 2rem;
+  }
+
+  .ha-about__mission-text {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .ha-about__values-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ha-about__value-card {
+    border-right: none;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .ha-about__value-card:last-child {
+    border-bottom: none;
+  }
+}

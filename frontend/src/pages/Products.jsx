@@ -5,7 +5,7 @@ import AddProductForm from "../components/AddProductForm";
 import OrderTrackingModal from "../components/OrderTrackingModal";
 import ProductCard from "../components/ProductCard";
 import { useProducts } from "../hooks/useProducts";
-import "./products.css";
+import "./AdminProducts.css";
 
 export default function Products() {
   const [products, setProducts] = useState([]);

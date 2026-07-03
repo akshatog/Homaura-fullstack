@@ -18,7 +18,8 @@ import "../styles/MyOrders.css";
 export default function UserProducts({ defaultTab = "products" }) {
   const [products, setProducts] = useState([]);
   const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [productsLoading, setProductsLoading] = useState(true);
+  const [ordersLoading, setOrdersLoading] = useState(true);
   const [activeTab, setActiveTab] = useState(defaultTab);
   const [orderConfirmation, setOrderConfirmation] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
@@ -29,11 +30,9 @@ export default function UserProducts({ defaultTab = "products" }) {
   const [reviewProduct, setReviewProduct] = useState(null);
 
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const [selectedTag, setSelectedTag] = useState("All Tags");
   const [priceRange, setPriceRange] = useState([299, 49999]);
-  const [selectedRating, setSelectedRating] = useState("All");
-  const [selectedDiscount, setSelectedDiscount] = useState("All");
-  const [selectedAvailability, setSelectedAvailability] = useState("All");
+  const [sortBy, setSortBy] = useState("Featured");
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
 
@@ -79,42 +78,49 @@ export default function UserProducts({ defaultTab = "products" }) {
   const { fetchUserOrders, createOrder } = useOrders();
 
   useEffect(() => {
-    async function loadData() {
-      try {
-        const user = JSON.parse(localStorage.getItem("user"));
+    const user = JSON.parse(localStorage.getItem("user"));
 
-        if (defaultTab === "orders" && !user?.id) {
-          navigate("/login", { state: { from: location } });
-          return;
-        }
-
-        const response = await fetchAllProducts();
-        const allProducts = response.products || response || [];
-        setProducts(allProducts);
-
-        if (user?.id) {
-          const ordersData = await fetchUserOrders(user.id);
-          setOrders(ordersData);
-        }
-      } catch (err) {
-        console.error("Load error:", err);
-        setErrorMessage("Failed to load data. Please refresh the page.");
-      } finally {
-        setLoading(false);
-      }
+    if (defaultTab === "orders" && !user?.id) {
+      navigate("/login", { state: { from: location } });
+      return;
     }
-    loadData();
-  }, [fetchAllProducts, fetchUserOrders, navigate, defaultTab]);
+
+    setProductsLoading(true);
+    fetchAllProducts()
+      .then(res => {
+        const allProducts = res.products || res || [];
+        setProducts(allProducts);
+      })
+      .catch(err => {
+        console.error("Products load error:", err);
+        setErrorMessage("Failed to load products. Please refresh the page.");
+      })
+      .finally(() => {
+        setProductsLoading(false);
+      });
+
+    if (user?.id) {
+      setOrdersLoading(true);
+      fetchUserOrders(user.id)
+        .then(ordersData => {
+          setOrders(ordersData);
+        })
+        .catch(err => {
+          console.error("Orders load error:", err);
+        })
+        .finally(() => {
+          setOrdersLoading(false);
+        });
+    } else {
+      setOrdersLoading(false);
+    }
+  }, [fetchAllProducts, fetchUserOrders, navigate, defaultTab, location]);
 
   const filteredProducts = useMemo(() => {
     const baseProducts = searchQuery ? searchResults : products;
 
-    return baseProducts.filter(product => {
+    let filtered = baseProducts.filter(product => {
       if (selectedCategory !== "All" && product.category !== selectedCategory) {
-        return false;
-      }
-
-      if (selectedTag !== "All Tags" && product.badge !== selectedTag) {
         return false;
       }
 
@@ -122,32 +128,17 @@ export default function UserProducts({ defaultTab = "products" }) {
         return false;
       }
 
-      if (selectedRating !== "All") {
-        const minRating = parseInt(selectedRating);
-        const productRating = product.averageRating || 0;
-        if (productRating < minRating) {
-          return false;
-        }
-      }
-
-      if (selectedDiscount !== "All") {
-        const minDiscount = parseInt(selectedDiscount);
-        const productDiscount = product.discount || 0;
-        if (productDiscount < minDiscount) {
-          return false;
-        }
-      }
-
-      if (selectedAvailability === "In Stock" && product.stock === 0) {
-        return false;
-      }
-      if (selectedAvailability === "Out of Stock" && product.stock > 0) {
-        return false;
-      }
-
       return true;
     });
-  }, [products, searchQuery, searchResults, selectedCategory, selectedTag, priceRange, selectedRating, selectedDiscount, selectedAvailability]);
+
+    if (sortBy === "PriceLowHigh") {
+      filtered.sort((a, b) => a.price - b.price);
+    } else if (sortBy === "PriceHighLow") {
+      filtered.sort((a, b) => b.price - a.price);
+    }
+    // "Featured" can just be the default order, or we could sort by some other logic if available.
+    return filtered;
+  }, [products, searchQuery, searchResults, selectedCategory, priceRange, sortBy]);
 
   const handleSearch = (query) => {
     setSearchQuery(query);
@@ -257,7 +248,9 @@ export default function UserProducts({ defaultTab = "products" }) {
 
 
 
-  if (loading) {
+  const isLoading = activeTab === "products" ? productsLoading : ordersLoading;
+
+  if (isLoading) {
     return (
       <div className="products-container">
         <div className="loading">Loading...</div>
@@ -266,15 +259,9 @@ export default function UserProducts({ defaultTab = "products" }) {
   }
 
   return (
-    <div className="products-page">
-      <header className="products-header">
-        <div className="header-content">
-          <div className="header-left">
-            <h1>{activeTab === "products" ? "🛍️ Shop" : "📦 My Orders"}</h1>
-            <p>{activeTab === "products" ? "Browse our curated collection" : "Track your recent purchases"}</p>
-          </div>
-        </div>
-      </header>
+    <div className="ha-products-page">
+      {/* Header with breadcrumbs and counts was removed per user request to save space */}
+
 
       {errorMessage && (
         <div className="message-banner error-banner">
@@ -315,208 +302,178 @@ export default function UserProducts({ defaultTab = "products" }) {
         </button>
       </div>
 
-      <div className="page-title-section" style={{ padding: "0 2rem", marginBottom: "1rem" }}>
+      <div className="page-title-section">
         {activeTab === "products" ? (
-          <h2>All Products ({filteredProducts.length})</h2>
+          <h2>
+            All Products
+          </h2>
         ) : (
-          <h2>My Orders ({orders.length})</h2>
+          <h2>
+            My Orders ({orders.length})
+          </h2>
         )}
       </div>
 
       {activeTab === "products" && (
-        <>
-          <SearchBar
-            products={products}
-            onSearch={handleSearch}
-            onClear={handleClearSearch}
-          />
+        <div className="ha-shop-layout">
+          
+          <div className="ha-mobile-filter-trigger">
+            <button className="ha-btn-mobile-filter" onClick={() => setShowMobileFilters(true)}>
+              <span className="filter-icon">⚙️</span> Filters
+            </button>
+          </div>
+          
+          {showMobileFilters && (
+            <div className="mobile-filter-overlay" onClick={() => setShowMobileFilters(false)}></div>
+          )}
 
-          <div className="filters-section">
-            <div className="filter-group">
-              <label>Category</label>
-              <select
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-              >
-                <option>All</option>
-                <option>Personalized</option>
-                <option>Hampers</option>
-                <option>Gifts for Her</option>
-                <option>Gifts for Him</option>
-                <option>Kids Gifts</option>
-                <option>Couple Gifts</option>
-                <option>Romantic</option>
-                <option>Birthday</option>
-                <option>Anniversary</option>
-                <option>Home Decor</option>
-                <option>Festive Gifts</option>
-                <option>Luxury Gifts</option>
-                <option>Accessories</option>
-              </select>
+          <aside className={`ha-shop-sidebar ${showMobileFilters ? 'open' : ''}`}>
+            <div className="ha-sidebar-header mobile-only">
+              <h3>Filters</h3>
+              <button className="btn-close-filters" onClick={() => setShowMobileFilters(false)}>✕</button>
             </div>
-
-            <div className="filter-group">
-              <label>Tags</label>
-              <select
-                value={selectedTag}
-                onChange={(e) => setSelectedTag(e.target.value)}
-              >
-                <option>All Tags</option>
-                <option>Best Seller</option>
-                <option>Trending</option>
-                <option>Popular</option>
-                <option>Limited Edition</option>
-                <option>New Arrival</option>
-              </select>
-            </div>
-
-            <div className="filter-group">
-              <label>Price Range</label>
-              <div className="price-range-slider">
-                <div className="price-labels">
-                  <span>₹{priceRange[0]}</span>
-                  <span>₹{priceRange[1]}</span>
+            
+            <div className="ha-filters-section">
+              <h2 className="ha-filters-title">Filters</h2>
+              
+              <div className="ha-filter-group">
+                <label className="ha-filter-label">Category</label>
+                <div className="ha-category-list">
+                  {["All", ...new Set(products.map(p => p.category).filter(Boolean))].map(cat => (
+                    <label key={cat} className="ha-category-item">
+                      <input 
+                        type="radio" 
+                        name="category" 
+                        value={cat} 
+                        checked={selectedCategory === cat} 
+                        onChange={(e) => setSelectedCategory(e.target.value)} 
+                        className="ha-radio-as-checkbox"
+                      />
+                      <span className="ha-category-text">{cat}</span>
+                    </label>
+                  ))}
                 </div>
-                <input
-                  type="range"
-                  min="299"
-                  max="49999"
-                  value={priceRange[0]}
-                  onChange={(e) => {
-                    const newMin = parseInt(e.target.value);
-                    if (newMin < priceRange[1]) {
-                      setPriceRange([newMin, priceRange[1]]);
-                    }
-                  }}
-                  className="range-slider range-min"
-                />
-                <input
-                  type="range"
-                  min="299"
-                  max="49999"
-                  value={priceRange[1]}
-                  onChange={(e) => {
-                    const newMax = parseInt(e.target.value);
-                    if (newMax > priceRange[0]) {
-                      setPriceRange([priceRange[0], newMax]);
-                    }
-                  }}
-                  className="range-slider range-max"
-                />
-                <div className="price-inputs">
+              </div>
+
+              <div className="ha-filter-group">
+                <label className="ha-filter-label">Price Range</label>
+                <div className="ha-price-range-slider">
+                  {/* Single slider for max price — clear and overflow-safe */}
+                  <div className="price-labels">
+                    <span>₹{priceRange[0].toLocaleString('en-IN')}</span>
+                    <span>up to ₹{priceRange[1].toLocaleString('en-IN')}</span>
+                  </div>
                   <input
-                    type="number"
-                    value={priceRange[0]}
-                    onChange={(e) => {
-                      const newMin = parseInt(e.target.value) || 299;
-                      if (newMin < priceRange[1]) {
-                        setPriceRange([newMin, priceRange[1]]);
-                      }
-                    }}
+                    type="range"
                     min="299"
-                    max={priceRange[1]}
-                    placeholder="Min"
-                  />
-                  <span>-</span>
-                  <input
-                    type="number"
+                    max="49999"
                     value={priceRange[1]}
                     onChange={(e) => {
-                      const newMax = parseInt(e.target.value) || 49999;
+                      const newMax = parseInt(e.target.value);
                       if (newMax > priceRange[0]) {
                         setPriceRange([priceRange[0], newMax]);
                       }
                     }}
-                    min={priceRange[0]}
-                    max="49999"
-                    placeholder="Max"
+                    className="range-slider"
                   />
+                  <div className="price-inputs">
+                    <div className="price-input-group">
+                      <span className="price-input-label">Min</span>
+                      <input
+                        type="number"
+                        value={priceRange[0]}
+                        onChange={(e) => {
+                          const newMin = parseInt(e.target.value) || 299;
+                          if (newMin < priceRange[1]) {
+                            setPriceRange([newMin, priceRange[1]]);
+                          }
+                        }}
+                        min="299"
+                        max={priceRange[1]}
+                        placeholder="299"
+                      />
+                    </div>
+                    <span className="price-inputs-dash">–</span>
+                    <div className="price-input-group">
+                      <span className="price-input-label">Max</span>
+                      <input
+                        type="number"
+                        value={priceRange[1]}
+                        onChange={(e) => {
+                          const newMax = parseInt(e.target.value) || 49999;
+                          if (newMax > priceRange[0]) {
+                            setPriceRange([priceRange[0], newMax]);
+                          }
+                        }}
+                        min={priceRange[0]}
+                        max="49999"
+                        placeholder="49999"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
+
+              <div className="ha-filter-actions">
+                <label className="ha-filter-label">Sort By</label>
+                <select 
+                  className="ha-sort-select" 
+                  value={sortBy} 
+                  onChange={(e) => setSortBy(e.target.value)}
+                >
+                  <option value="Featured">Featured</option>
+                  <option value="PriceLowHigh">Price: Low to High</option>
+                  <option value="PriceHighLow">Price: High to Low</option>
+                </select>
+                <button
+                  className="btn-reset-filters"
+                  style={{marginTop: '1rem', width: '100%', padding: '0.75rem', borderRadius: '50px', background: 'transparent', border: '1px solid var(--color-primary)', color: 'var(--color-primary)', cursor: 'pointer', fontWeight: '600'}}
+                  onClick={() => {
+                    setSelectedCategory("All");
+                    setPriceRange([299, 49999]);
+                    setSortBy("Featured");
+                  }}
+                >
+                  Reset Filters
+                </button>
+              </div>
+            </div>
+          </aside>
+
+          <div className="ha-shop-main-content">
+            <div className="ha-search-wrapper" style={{ display: "flex", justifyContent: "center", marginBottom: "2.5rem" }}>
+              <div style={{ width: "100%", maxWidth: "540px" }}>
+                <SearchBar
+                  products={products}
+                  onSearch={handleSearch}
+                  onClear={handleClearSearch}
+                />
+              </div>
             </div>
 
-            <div className="filter-group">
-              <label>Rating</label>
-              <select
-                value={selectedRating}
-                onChange={(e) => setSelectedRating(e.target.value)}
-              >
-                <option>All</option>
-                <option value="4">4★ & above</option>
-                <option value="3">3★ & above</option>
-                <option value="2">2★ & above</option>
-              </select>
-            </div>
-
-            <div className="filter-group">
-              <label>Discount</label>
-              <select
-                value={selectedDiscount}
-                onChange={(e) => setSelectedDiscount(e.target.value)}
-              >
-                <option>All</option>
-                <option value="10">10%+</option>
-                <option value="20">20%+</option>
-                <option value="30">30%+</option>
-                <option value="50">50%+</option>
-              </select>
-            </div>
-
-            <div className="filter-group">
-              <label>Availability</label>
-              <select
-                value={selectedAvailability}
-                onChange={(e) => setSelectedAvailability(e.target.value)}
-              >
-                <option>All</option>
-                <option>In Stock</option>
-                <option>Out of Stock</option>
-              </select>
-            </div>
-
-            <div className="filter-actions">
-              <button
-                className="btn-reset-filters"
-                onClick={() => {
-                  setSelectedCategory("All");
-                  setSelectedTag("All Tags");
-                  setPriceRange([299, 49999]);
-                  setSelectedRating("All");
-                  setSelectedDiscount("All");
-                  setSelectedAvailability("All");
-                }}
-              >
-                Reset Filters
-              </button>
+            <div className="ha-products-container">
+              {filteredProducts.length === 0 ? (
+                <div className="no-products">
+                  <div className="no-products-icon">🔍</div>
+                  <h3>No products found</h3>
+                  <p>Try adjusting your filters</p>
+                </div>
+              ) : (
+                <div className="ha-products-grid">
+                  {filteredProducts.map((product) => (
+                    <ProductCardUser
+                      key={product.id}
+                      product={product}
+                      onProductClick={() => navigate(`/products/${product.id}`, { state: { product } })}
+                      onAddToCart={addToCart}
+                      onViewDetails={() => navigate(`/products/${product.id}`, { state: { product } })}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
           </div>
-
-
-          <div className="products-container">
-            {filteredProducts.length === 0 ? (
-              <div className="no-products">
-                <div className="no-products-icon">🔍</div>
-                <h3>No products found</h3>
-                <p>Try adjusting your filters</p>
-              </div>
-            ) : (
-              <div className="products-grid">
-                {filteredProducts.map((product) => (
-                  <ProductCardUser
-                    key={product.id}
-                    product={product}
-                    onProductClick={(productId) => {
-                      setSelectedProductId(productId);
-                      setShowDetailsModal(true);
-                    }}
-                    onAddToCart={addToCart}
-                    onViewDetails={(productId) => navigate(`/products/${productId}`)}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
-        </>
+        </div>
       )}
 
       {activeTab === "orders" && (

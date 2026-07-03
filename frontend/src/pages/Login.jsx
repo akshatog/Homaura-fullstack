@@ -67,8 +67,16 @@ export default function Login() {
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <h2>Welcome To Homaura💞</h2>
-        <p className="subtitle">Login to your account</p>
+        {/* Brand logo */}
+        <div className="auth-logo">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 48" fill="none">
+            <path d="M20 4C20 4 8 14 8 26C8 33.7 13.3 40 20 42C26.7 40 32 33.7 32 26C32 14 20 4 20 4Z" fill="#5C6B47" opacity="0.85"/>
+            <path d="M20 18C20 18 24 24 22 32" stroke="#FAF7F2" strokeWidth="1.5" strokeLinecap="round" opacity="0.7"/>
+          </svg>
+          <span className="auth-logo-name">HomAura</span>
+        </div>
+        <h2>Welcome back</h2>
+        <p className="subtitle">Sign in to your account to continue</p>
 
         <form onSubmit={handleSubmit}>
           <div className="input-group">

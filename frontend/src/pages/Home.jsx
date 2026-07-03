@@ -3,29 +3,75 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import api from "../utils/api";
 import FAQ from "../components/FAQ";
-import {
-  slideUp,
-  slideInLeft,
-  slideInRight,
-  staggerContainer,
-  staggerItem,
-  cardHover,
-  floatingAnimation,
-  fadeIn
-} from "../utils/animationVariants";
+import { optimizeImageUrl } from "../utils/imageUtils";
 import "../styles/Home.css";
 
-import { optimizeImageUrl } from "../utils/imageUtils";
+// --- SVG Icons ---
+const ArrowRightIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="5" y1="12" x2="19" y2="12"></line>
+    <polyline points="12 5 19 12 12 19"></polyline>
+  </svg>
+);
 
-const getBadgeClass = (badgeText) => {
-  if (!badgeText) return "";
-  if (badgeText === "Best Seller") return "";
-  if (badgeText === "New Arrival") return "new";
-  if (badgeText === "Popular") return "popular";
-  if (badgeText === "Limited Edition") return "limited";
-  if (badgeText === "Trending") return "trending";
-  return "";
-};
+const LeafIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"></path>
+    <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"></path>
+  </svg>
+);
+
+const ShieldCheckIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+    <path d="M9 12l2 2 4-4"></path>
+  </svg>
+);
+
+const TruckIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="1" y="3" width="15" height="13"></rect>
+    <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+    <circle cx="5.5" cy="18.5" r="2.5"></circle>
+    <circle cx="18.5" cy="18.5" r="2.5"></circle>
+  </svg>
+);
+
+const PackageCheckIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M16 16l2 2 4-4"></path>
+    <path d="M21 10V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l2-1.14"></path>
+    <path d="M16.5 9.4L7.55 4.24"></path>
+    <polyline points="3.29 7 12 12 20.71 7"></polyline>
+    <line x1="12" y1="22" x2="12" y2="12"></line>
+  </svg>
+);
+
+const HeadphonesIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M3 18v-6a9 9 0 0 1 18 0v6"></path>
+    <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path>
+  </svg>
+);
+
+const TagIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+    <line x1="7" y1="7" x2="7.01" y2="7"></line>
+  </svg>
+);
+
+const HeartIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+  </svg>
+);
+
+const SparklesIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 3l1.912 5.813a2 2 0 0 0 1.275 1.275L21 12l-5.813 1.912a2 2 0 0 0-1.275 1.275L12 21l-1.912-5.813a2 2 0 0 0-1.275-1.275L3 12l5.813-1.912a2 2 0 0 0 1.275-1.275L12 3z"></path>
+  </svg>
+);
 
 
 export default function Home() {
@@ -35,27 +81,14 @@ export default function Home() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(4);
 
-  const offerings = [
-    { title: "Personalized Nikah Nama", icon: "✨" },
-    { title: "Hampers & Gift Boxes", icon: "🎁" },
-    { title: "Wallets, Pens & Keychains (for him)", icon: "🕴️" },
-    { title: "Scrunchies, Chudiyan & Jhumkas (for her)", icon: "💖" },
-  ];
-
-  const reasons = [
-    { title: "Customized with love", text: "Every detail reflects your story." },
-    { title: "Creative packaging", text: "Layered textures, ribbons, and luxe touches." },
-    { title: "Gifts for both him & her", text: "Balanced curation for every recipient." },
-  ];
-
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) {
-        setItemsPerPage(1);
+        setItemsPerPage(2); // Show more items on smaller screens for categories
       } else if (window.innerWidth < 1024) {
-        setItemsPerPage(2);
-      } else {
         setItemsPerPage(4);
+      } else {
+        setItemsPerPage(6); // Show 6 per row as per mockup
       }
     };
 
@@ -71,6 +104,7 @@ export default function Home() {
         const featured = data.products
           ? data.products.filter((p) => p.isFeatured)
           : data.filter((p) => p.isFeatured);
+        // We fetch up to 12 to use as our "Shop By Category" stand-ins
         setTrendingProducts(
           featured.length > 0 ? featured.slice(0, 12) : (data.products || data).slice(0, 12)
         );
@@ -91,7 +125,7 @@ export default function Home() {
         const nextIndex = prevIndex + itemsPerPage;
         return nextIndex >= trendingProducts.length ? 0 : nextIndex;
       });
-    }, 4000);
+    }, 5000);
 
     return () => clearInterval(interval);
   }, [trendingProducts, itemsPerPage]);
@@ -100,323 +134,159 @@ export default function Home() {
     navigate(`/products/${productId}`);
   };
 
-
-
   return (
-    <motion.div
-      className="home-page"
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      style={{ position: 'relative', zIndex: 1 }}
-    >
-      <section className="home-hero">
-        <motion.div
-          className="home-hero__content"
-          variants={slideInLeft}
-        >
-          <motion.p
-            className="home-pill"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            Homaura
-          </motion.p>
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-          >
-            Where every gift tells a story
-          </motion.h1>
-          <motion.p
-            className="home-hero__text"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
-          >
-            Personalized & thoughtful gifts for every occasion. Discover curated hampers,
-            Nikah Namas, and keepsakes infused with pastel elegance.
-          </motion.p>
-          <motion.div
-            className="home-hero__cta"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.7 }}
-          >
-            <motion.button
-              className="btn-primary"
-              onClick={() => navigate("/shop")}
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              Shop Now
-            </motion.button>
-            <motion.button
-              className="btn-ghost"
-              onClick={() => navigate("/contact")}
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              Talk to us
-            </motion.button>
-          </motion.div>
-        </motion.div>
-        <motion.div
-          className="home-hero__visual"
-          variants={slideInRight}
-        >
-          <div className="hero-card">
-            <span className="hero-card__tag">Pastel Dreams</span>
-            <h3>Custom Hampers</h3>
-            <p>Soft palettes. Luxe elements. Love in every layer.</p>
-          </div>
-          <div className="hero-card hero-card--secondary">
-            <h3>Nikah Nama</h3>
-            <p>Made-to-order artworks to celebrate sacred promises.</p>
-          </div>
-        </motion.div>
+    <div className="home-page">
+      {/* ── Hero Section ── */}
+      <section className="ha-hero">
+        <div className="ha-hero__content">
+          <span className="ha-hero__eyebrow">CURATED DECOR</span>
+          <h1 className="ha-hero__heading">
+            Timeless Pieces.<br />
+            Thoughtful Living.
+          </h1>
+          <p className="ha-hero__description">
+            Discover handpicked decor that brings warmth, character, and calm into your everyday spaces.
+          </p>
+          <button className="ha-btn-primary" onClick={() => navigate("/shop")}>
+            Shop Now <ArrowRightIcon />
+          </button>
+        </div>
+        <div className="ha-hero__image-wrapper">
+          <img src="/images/hero_decor.png" alt="HomAura modern living room decor" className="ha-hero__image" />
+        </div>
       </section>
 
-      <motion.section
-        className="trending-section"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.6 }}
-      >
-        <div className="trending-container">
-          <motion.div
-            className="trending-header"
-            variants={slideUp}
-            initial="initial"
-            whileInView="animate"
-            viewport={{ once: true }}
-          >
-            <h2>Trending Gifts This Season</h2>
-            <p>Our most loved creations, curated just for you 💞</p>
-          </motion.div>
-
-          {loading ? (
-            <div className="trending-loading">Loading products...</div>
-          ) : (
-            <>
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={currentIndex}
-                  className="trending-grid"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  transition={{ duration: 0.5, ease: "easeInOut" }}
-                >
-                  {trendingProducts
-                    .slice(currentIndex, currentIndex + itemsPerPage)
-                    .map((product, index) => {
-                      const badgeClass = getBadgeClass(product.badge);
-                      return (
-                        <motion.div
-                          key={product.id}
-                          className="trending-card"
-                          whileHover={{
-                            y: -8,
-                            scale: 1.02,
-                            transition: { duration: 0.3 }
-                          }}
-                          whileTap={{ scale: 0.98 }}
-                          onClick={() => handleProductClick(product.id)}
-                          style={{ cursor: "pointer" }}
-                        >
-                          <motion.div
-                            className="trending-image-wrapper"
-                            whileHover="hover"
-                            initial="rest"
-                          >
-                            <motion.img
-                              src={optimizeImageUrl(product.imageUrl, 600)}
-                              alt={product.name}
-                              loading="lazy"
-
-                              variants={{
-                                rest: { scale: 1 },
-                                hover: { scale: 1.1 }
-                              }}
-                              transition={{ duration: 0.4 }}
-                            />
-                            {product.badge && (
-                              <motion.span
-                                className={`trending-badge ${badgeClass}`}
-                                initial={{ opacity: 0, scale: 0.8 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                transition={{ delay: index * 0.1 + 0.3 }}
-                              >
-                                {product.badge}
-                              </motion.span>
-                            )}
-                          </motion.div>
-                          <div className="trending-info">
-                            <h3>{product.name}</h3>
-                            <p className="trending-price">₹{product.price}</p>
-                            <p className="trending-category">{product.category}</p>
-                          </div>
-                        </motion.div>
-                      );
-                    })}
-                </motion.div>
-              </AnimatePresence>
-
-              <motion.div
-                className="trending-view-all"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.3 }}
-              >
-                <motion.button
-                  className="btn-secondary"
-                  onClick={() => navigate("/shop")}
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  View All Products →
-                </motion.button>
-              </motion.div>
-            </>
-          )}
+      {/* ── Trust Badges Row ── */}
+      <section className="ha-trust-badges">
+        <div className="ha-trust-badge">
+          <LeafIcon />
+          <div>
+            <strong>SUSTAINABLE MATERIALS</strong>
+            <p>Conscious choices for a better tomorrow</p>
+          </div>
         </div>
-      </motion.section>
+        <div className="ha-trust-badge__divider"></div>
+        <div className="ha-trust-badge">
+          <ShieldCheckIcon />
+          <div>
+            <strong>SECURE PAYMENTS</strong>
+            <p>100% secure & trusted checkout</p>
+          </div>
+        </div>
+        <div className="ha-trust-badge__divider"></div>
+        <div className="ha-trust-badge">
+          <TruckIcon />
+          <div>
+            <strong>PAN INDIA DELIVERY</strong>
+            <p>Delivering happiness to your doorstep</p>
+          </div>
+        </div>
+        <div className="ha-trust-badge__divider"></div>
+        <div className="ha-trust-badge">
+          <PackageCheckIcon />
+          <div>
+            <strong>EASY RETURNS</strong>
+            <p>Hassle-free returns within 7 days</p>
+          </div>
+        </div>
+        <div className="ha-trust-badge__divider"></div>
+        <div className="ha-trust-badge">
+          <HeadphonesIcon />
+          <div>
+            <strong>CUSTOMER SUPPORT</strong>
+            <p>We're here to help you, always</p>
+          </div>
+        </div>
+      </section>
 
-      <motion.section
-        className="home-section home-card--about"
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.6 }}
-      >
-        <h2>About Us !</h2>
-        <p>
-          A one-stop shop for personalized & thoughtful gifts because every occasion
-          deserves something special.
-        </p>
-      </motion.section>
+      {/* ── Shop By Category (reusing trendingProducts logic) ── */}
+      <section className="ha-categories-section">
+        <div className="ha-categories__header">
+          <span className="ha-categories__eyebrow">EXPLORE OUR COLLECTION</span>
+          <h2 className="ha-categories__heading">Shop By Category</h2>
+        </div>
 
-      <motion.section
-        className="home-section home-card--occasions"
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.6 }}
-      >
-        <h2>For Every Occasion</h2>
-        <p>Weddings | Birthdays | Anniversaries | Festive Moments</p>
-        <span>We make celebrations unforgettable!</span>
-      </motion.section>
+        {loading ? (
+          <div className="ha-categories__loading">Loading...</div>
+        ) : (
+          <div className="ha-categories__carousel-wrapper">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentIndex}
+                className="ha-categories__grid"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.5, ease: "easeInOut" }}
+              >
+                {trendingProducts
+                  .slice(currentIndex, currentIndex + itemsPerPage)
+                  .map((product) => (
+                    <div
+                      key={product.id}
+                      className="ha-category-card"
+                      onClick={() => handleProductClick(product.id)}
+                      role="button"
+                      tabIndex={0}
+                    >
+                      <div className="ha-category-card__image-wrapper">
+                        <img
+                          src={optimizeImageUrl(product.imageUrl, 400)}
+                          alt={product.name}
+                          loading="lazy"
+                        />
+                      </div>
+                      <h3 className="ha-category-card__title">{product.name}</h3>
+                      <span className="ha-category-card__link">
+                        Shop Now <ArrowRightIcon />
+                      </span>
+                    </div>
+                  ))}
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        )}
+      </section>
 
-      <motion.section
-        className="home-section home-card--offerings"
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.6 }}
-      >
-        <h2>What We Offer</h2>
-        <motion.div
-          className="home-offerings-grid"
-          variants={staggerContainer}
-          initial="initial"
-          whileInView="animate"
-          viewport={{ once: true }}
-        >
-          {offerings.map((item) => (
-            <motion.article
-              key={item.title}
-              variants={staggerItem}
-              whileHover={{ scale: 1.05, y: -5 }}
-            >
-              <span>{item.icon}</span>
-              <p>{item.title}</p>
-            </motion.article>
-          ))}
-        </motion.div>
-      </motion.section>
-
-      <motion.section
-        className="home-why"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.6 }}
-      >
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-        >
-          Why Choose Homaura?
-        </motion.h2>
-        <motion.div
-          className="home-why__grid"
-          variants={staggerContainer}
-          initial="initial"
-          whileInView="animate"
-          viewport={{ once: true }}
-        >
-          {reasons.map((card) => (
-            <motion.div
-              key={card.title}
-              className="home-why__card"
-              variants={staggerItem}
-              whileHover={{ y: -5, scale: 1.02 }}
-            >
-              <h3>{card.title}</h3>
-              <p>{card.text}</p>
-            </motion.div>
-          ))}
-        </motion.div>
-      </motion.section>
-
-      <motion.section
-        className="home-section home-card--cta"
-        initial={{ opacity: 0, scale: 0.95 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.6 }}
-      >
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          Let Homaura be part of your next celebration!
-        </motion.h2>
-        <motion.p
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-        >
-          DM us for orders | Follow for ideas
-        </motion.p>
-        <motion.a
-          href="https://www.instagram.com/akshat_sanghi_/"
-          target="_blank"
-          rel="noreferrer"
-          className="btn-instagram"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          whileHover={{ scale: 1.05, y: -3 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          Follow us on Instagram
-        </motion.a>
-      </motion.section>
-
+      {/* ── Bottom Band ── */}
+      <section className="ha-bottom-band">
+        <div className="ha-bottom-band__inner">
+          <div className="ha-bottom-value">
+            <TagIcon />
+            <div>
+              <strong>CURATED WITH CARE</strong>
+              <p>Handpicked pieces, just for you</p>
+            </div>
+          </div>
+          <div className="ha-bottom-band__divider"></div>
+          <div className="ha-bottom-value">
+            <HeartIcon />
+            <div>
+              <strong>MADE TO INSPIRE</strong>
+              <p>Beautiful spaces, every day</p>
+            </div>
+          </div>
+          <div className="ha-bottom-band__divider"></div>
+          <div className="ha-bottom-value">
+            <LeafIcon />
+            <div>
+              <strong>ROOTED IN NATURE</strong>
+              <p>Earthy tones, natural materials</p>
+            </div>
+          </div>
+          <div className="ha-bottom-band__divider"></div>
+          <div className="ha-bottom-value">
+            <SparklesIcon />
+            <div>
+              <strong>TIMELESS BY DESIGN</strong>
+              <p>Pieces that stay, styles that evolve</p>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      {/* Keeping FAQ just in case, as it was in the original */}
       <FAQ />
-    </motion.div>
+    </div>
   );
 }

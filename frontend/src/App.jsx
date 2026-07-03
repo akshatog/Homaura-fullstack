@@ -16,6 +16,8 @@ import Checkout from "./pages/Checkout.jsx";
 import AppLayout from "./components/AppLayout.jsx";
 import ProtectedRoute, { AdminRoute } from "./components/ProtectedRoute.jsx";
 import Analytics from "./pages/Analytics.jsx";
+import AboutUs from "./pages/AboutUs.jsx";
+import Inspiration from "./pages/Inspiration.jsx";
 
 function App() {
   return (
@@ -55,6 +57,8 @@ function App() {
         <Route path="/shop" element={<UserProducts defaultTab="products" />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/terms" element={<Terms />} />
+        <Route path="/about" element={<AboutUs />} />
+        <Route path="/inspiration" element={<Inspiration />} />
         <Route path="/products/:id" element={<ProductDetails />} />
 
         <Route path="/products" element={<Navigate to="/shop" replace />} />

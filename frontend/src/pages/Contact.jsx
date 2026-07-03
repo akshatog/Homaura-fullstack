@@ -51,7 +51,7 @@ export default function Contact() {
     <div className="contact-page">
       <section className="contact-hero">
         <p>Connect with us</p>
-        <h1>Contact Presento Treasure</h1>
+        <h1>Contact Homaura</h1>
         <p className="contact-hero__text">
           WhatsApp, call, or mail us for custom orders, rush requests, or styling help.
           We reply within a few pastel-perfect hours.

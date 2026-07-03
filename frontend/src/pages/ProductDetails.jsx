@@ -15,6 +15,7 @@ import {
   notificationVariants,
   imageZoom
 } from "../utils/animationVariants";
+import ProductGallery from "../components/ProductGallery";
 import "../styles/ProductDetails.css";
 
 export default function ProductDetails() {
@@ -208,15 +209,8 @@ export default function ProductDetails() {
         initial="initial"
         animate="animate"
       >
-        <motion.img
-          src={product.imageUrl}
-          alt={product.name}
-          loading="lazy"
-          whileHover="hover"
-          initial="rest"
-          variants={imageZoom}
-          transition={{ duration: 0.4 }}
-        />
+        {/* Product Gallery — supports multiple images + video */}
+        <ProductGallery product={product} />
         <motion.div
           className="product-details-info"
           variants={slideInRight}

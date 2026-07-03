@@ -66,6 +66,13 @@
   flex-direction: column;
 }
 
+.form-hint {
+  font-weight: 400;
+  font-size: 0.82rem;
+  color: #9ca3af;
+  margin-left: 4px;
+}
+
 .form-group label {
   font-weight: 600;
   color: #374151;
@@ -106,38 +113,120 @@
   gap: 1.5rem;
 }
 
-.file-input-wrapper {
-  position: relative;
-  overflow: hidden;
+/* ── Multi-image grid ─────────────────────────────────────────────── */
+.ap-image-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 12px;
 }
 
-.file-input-wrapper input[type='file'] {
-  position: absolute;
-  opacity: 0;
-  cursor: pointer;
+.ap-image-thumb {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 2px solid #e5e7eb;
+  flex-shrink: 0;
+}
+
+.ap-image-thumb img {
   width: 100%;
   height: 100%;
-}
-
-.file-label {
+  object-fit: cover;
   display: block;
-  padding: 0.9rem;
-  border: 1.5px dashed #e5e7eb;
-  border-radius: 8px;
-  background: #f9fafb;
-  text-align: center;
-  font-weight: 500;
-  color: #6b7280;
-  transition: all 0.3s ease;
-  cursor: pointer;
 }
 
-.file-input-wrapper:hover .file-label {
+.ap-image-thumb--cover {
   border-color: #ec4899;
-  background: #fce7f3;
-  color: #ec4899;
 }
 
+.ap-cover-badge {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(236,72,153,0.85);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  text-align: center;
+  padding: 2px 0;
+  letter-spacing: 0.5px;
+}
+
+.ap-remove-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: rgba(0,0,0,0.65);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  font-size: 11px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  transition: background 0.2s;
+}
+.ap-remove-btn:hover { background: #ef4444; }
+
+/* ── Upload button ────────────────────────────────────────────────── */
+.ap-upload-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.75rem 1.2rem;
+  background: #fce7f3;
+  color: #be185d;
+  border: 2px dashed #ec4899;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-top: 4px;
+}
+.ap-upload-btn:hover {
+  background: #fbcfe8;
+}
+
+/* ── Video preview ────────────────────────────────────────────────── */
+.ap-video-preview {
+  position: relative;
+  display: inline-block;
+  margin-top: 8px;
+}
+
+.ap-video-player {
+  max-width: 100%;
+  max-height: 240px;
+  border-radius: 10px;
+  display: block;
+  background: #000;
+}
+
+.ap-remove-btn--video {
+  position: static;
+  width: auto;
+  height: auto;
+  background: #fee2e2;
+  color: #991b1b;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 13px;
+  margin-top: 8px;
+  border: 1px solid #fca5a5;
+  display: inline-block;
+}
+.ap-remove-btn--video:hover { background: #fca5a5; }
+
+/* ── Submit ───────────────────────────────────────────────────────── */
 .btn-submit {
   background: linear-gradient(135deg, #ec4899, #be185d);
   color: white;
@@ -178,5 +267,10 @@
 
   .add-product-header h1 {
     font-size: 1.5rem;
+  }
+
+  .ap-image-thumb {
+    width: 80px;
+    height: 80px;
   }
 }

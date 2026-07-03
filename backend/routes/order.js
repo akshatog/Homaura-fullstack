@@ -36,15 +36,16 @@ router.get("/", auth, adminMiddleware, async (req, res) => {
     res.json(orders);
   } catch (err) {
     console.error("Fetch orders error:", err);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
 router.get("/user/:userId", auth, async (req, res) => {
   try {
-    const { userId } = req.params;
+    // Always use the JWT-verified user ID — ignore the URL param to prevent IDOR
+    const userId = req.user.userId;
     const orders = await prisma.order.findMany({
-      where: { userId: parseInt(userId) },
+      where: { userId },
       include: {
         items: {
           include: {
@@ -64,15 +65,17 @@ router.get("/user/:userId", auth, async (req, res) => {
     res.json(orders);
   } catch (err) {
     console.error("Fetch user orders error:", err);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
 router.get("/:orderId", auth, async (req, res) => {
+  const orderId = parseInt(req.params.orderId, 10);
+  if (isNaN(orderId)) return res.status(400).json({ error: "Invalid order ID" });
+
   try {
-    const { orderId } = req.params;
     const order = await prisma.order.findUnique({
-      where: { id: parseInt(orderId) },
+      where: { id: orderId },
       include: {
         user: {
           select: {
@@ -99,20 +102,24 @@ router.get("/:orderId", auth, async (req, res) => {
     if (!order) {
       return res.status(404).json({ error: "Order not found" });
     }
+
+    // Ownership check — a regular user can only see their own orders
+    if (order.userId !== req.user.userId && !req.user.isAdmin) {
+      return res.status(403).json({ error: "Forbidden" });
+    }
+
     res.json(order);
   } catch (err) {
     console.error("Fetch order error:", err);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
 router.post("/", auth, async (req, res) => {
   try {
-    const { userId, items, customerDetails } = req.body;
-
-    if (!userId) {
-      return res.status(400).json({ error: "userId is required" });
-    }
+    // Always derive userId from the verified JWT — never trust req.body.userId
+    const userId = req.user.userId;
+    const { items, customerDetails } = req.body;
 
     if (!items || !Array.isArray(items) || items.length === 0) {
       return res.status(400).json({ error: "items array is required and must not be empty" });
@@ -201,16 +208,22 @@ router.post("/", auth, async (req, res) => {
     res.status(201).json(order);
   } catch (err) {
     console.error("Create order error:", err);
-    // Surface stock/not-found errors as 400, everything else as 500
+    // Surface our own controlled stock/not-found messages as 400;
+    // everything else is an unexpected server error
     const isClientError = err.message.includes("not found") || err.message.includes("Insufficient stock");
-    res.status(isClientError ? 400 : 500).json({ error: err.message });
+    if (isClientError) {
+      return res.status(400).json({ error: err.message });
+    }
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
 // Update order status — admin only
 router.put("/:orderId", auth, adminMiddleware, async (req, res) => {
+  const orderId = parseInt(req.params.orderId, 10);
+  if (isNaN(orderId)) return res.status(400).json({ error: "Invalid order ID" });
+
   try {
-    const { orderId } = req.params;
     const { status, message } = req.body;
 
     const validStatuses = ["pending", "placed", "ready", "out_for_delivery", "delivered", "cancelled"];
@@ -219,7 +232,7 @@ router.put("/:orderId", auth, adminMiddleware, async (req, res) => {
     }
 
     const existingOrder = await prisma.order.findUnique({
-      where: { id: parseInt(orderId) },
+      where: { id: orderId },
       include: {
         items: {
           include: {
@@ -248,7 +261,7 @@ router.put("/:orderId", auth, adminMiddleware, async (req, res) => {
     }
 
     const order = await prisma.order.update({
-      where: { id: parseInt(orderId) },
+      where: { id: orderId },
       data: {
         status,
         message: message || getDefaultMessage(status),
@@ -292,7 +305,7 @@ router.put("/:orderId", auth, adminMiddleware, async (req, res) => {
     res.json(order);
   } catch (err) {
     console.error("Update order error:", err);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 

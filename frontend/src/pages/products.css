@@ -106,6 +106,32 @@
   letter-spacing: 0.025em;
 }
 
+.btn-analytics {
+  background: linear-gradient(135deg, #1e1e2e 0%, #2d2d4e 100%);
+  color: #e2e8f0;
+  border: 1px solid rgba(139, 92, 246, 0.4);
+  padding: 0.85rem 1.75rem;
+  border-radius: var(--radius-full);
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(139, 92, 246, 0.25);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  letter-spacing: 0.025em;
+}
+
+.btn-analytics:hover {
+  background: linear-gradient(135deg, #2d2d4e 0%, #3d2d6e 100%);
+  border-color: rgba(139, 92, 246, 0.7);
+  color: #fff;
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(139, 92, 246, 0.4);
+}
+
 .btn-add-product::after,
 .btn-track-orders::after {
   content: '';
@@ -589,7 +615,7 @@
   border: 2px solid rgba(236, 72, 153, 0.1);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
-  backdrop-filter: blur(10px);
+
 }
 
 .search-bar::before {

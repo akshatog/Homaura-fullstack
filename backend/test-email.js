@@ -12,7 +12,7 @@ console.log('EMAIL_PORT:', emailPort);
 console.log('EMAIL_USER:', process.env.EMAIL_USER);
 console.log('EMAIL_PASS:', process.env.EMAIL_PASS ? '✅ Set' : '❌ Not set');
 console.log('EMAIL_PASSWORD:', process.env.EMAIL_PASSWORD ? '✅ Set' : '❌ Not set');
-console.log('ADMIN_EMAIL:', process.env.ADMIN_EMAIL || 'presentotreasure@gmail.com (default)');
+console.log('ADMIN_EMAIL:', process.env.ADMIN_EMAIL || 'homaura@gmail.com (default)');
 console.log('Secure mode:', isSecure ? 'SSL (port 465)' : 'TLS (port 587)');
 console.log('\n🔄 Testing SMTP connection...\n');
 

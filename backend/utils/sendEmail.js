@@ -16,9 +16,25 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'akshatsanghi900@gmail.com';
-const FROM_NAME = 'Presento Treasure';
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
+if (!ADMIN_EMAIL) {
+  console.warn('WARNING: ADMIN_EMAIL is not set — order notification emails will not be CCed to admin.');
+}
+const FROM_NAME = 'Homaura';
 const FROM_EMAIL = process.env.EMAIL_USER;
+
+/**
+ * Escape user-supplied strings before embedding them in HTML email bodies.
+ * Prevents stored XSS when product names, customer names, addresses, or
+ * cancellation reasons contain HTML special characters.
+ */
+const escHtml = (value) =>
+  String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;');
 
 const getEmailTemplate = (content) => {
   return `
@@ -27,7 +43,7 @@ const getEmailTemplate = (content) => {
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Presento Treasure</title>
+      <title>Homaura</title>
       <style>
         * {
           margin: 0;
@@ -210,19 +226,19 @@ const getEmailTemplate = (content) => {
     <body>
       <div class="email-container">
         <div class="email-header">
-          <h1>✨ Presento Treasure</h1>
-          <p>Thoughtful Gifts, Delivered with Love</p>
+          <h1>✨ Homaura</h1>
+          <p>Inspire • Live • Elevate</p>
         </div>
         ${content}
         <div class="email-footer">
           <p><strong>Contact Us</strong></p>
           <p>📞 +91 73220 73770 | 📧 akshatsanghi900@gmail.com</p>
           <div class="social-links">
-            <a href="https://www.instagram.com/presento_treasure">Instagram</a> |
+            <a href="https://www.instagram.com/akshat_sanghi_">Instagram</a> |
             <a href="https://wa.me/917322073770">WhatsApp</a>
           </div>
           <p style="margin-top: 20px; font-size: 12px;">
-            © ${new Date().getFullYear()} Presento Treasure. All rights reserved.
+            © ${new Date().getFullYear()} Homaura. All rights reserved.
           </p>
         </div>
       </div>
@@ -233,7 +249,8 @@ const getEmailTemplate = (content) => {
 
 const calculateTotal = (items) => {
   const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const deliveryCharge = subtotal >= 999 ? 0 : 499;
+  // Matches CartContext: free delivery when subtotal > 499
+  const deliveryCharge = subtotal > 499 ? 0 : 499;
   const total = subtotal + deliveryCharge;
   return { subtotal, deliveryCharge, total };
 };
@@ -252,10 +269,10 @@ const formatProductsTable = (items) => {
       <tbody>
         ${items.map(item => `
           <tr>
-            <td>${item.product?.name || 'Product'}</td>
-            <td>${item.quantity}</td>
-            <td>₹${item.price}</td>
-            <td>₹${item.price * item.quantity}</td>
+            <td>${escHtml(item.product?.name || 'Product')}</td>
+            <td>${escHtml(item.quantity)}</td>
+            <td>₹${escHtml(item.price)}</td>
+            <td>₹${escHtml(item.price * item.quantity)}</td>
           </tr>
         `).join('')}
       </tbody>
@@ -300,15 +317,16 @@ export async function sendOrderConfirmationEmail(order) {
     const { subtotal, deliveryCharge, total } = calculateTotal(order.items);
     const customerDetails = extractCustomerDetails(order);
 
+    const safeCustomerName = escHtml(customerName);
     const content = `
       <div class="email-body">
         <h2>🎉 Order Confirmed!</h2>
-        <p>Dear ${customerName},</p>
-        <p>Thank you for your order! We're excited to prepare your special gift.</p>
-        
+        <p>Dear ${safeCustomerName},</p>
+        <p>Thank you for your order! We're excited to prepare your special items.</p>
+
         <div class="order-details">
           <h3>Order Details</h3>
-          <p><strong>Order ID:</strong> #${order.id}</p>
+          <p><strong>Order ID:</strong> #${escHtml(order.id)}</p>
           <p><strong>Order Date:</strong> ${new Date(order.createdAt).toLocaleDateString('en-IN', {
       year: 'numeric',
       month: 'long',
@@ -323,28 +341,28 @@ export async function sendOrderConfirmationEmail(order) {
         <div class="total-section">
           <div class="total-row">
             <span>Subtotal:</span>
-            <span>₹${subtotal}</span>
+            <span>₹${escHtml(subtotal)}</span>
           </div>
           <div class="total-row">
             <span>Delivery Charge:</span>
-            <span>${deliveryCharge === 0 ? 'FREE' : '₹' + deliveryCharge}</span>
+            <span>${deliveryCharge === 0 ? 'FREE' : '₹' + escHtml(deliveryCharge)}</span>
           </div>
           ${deliveryCharge === 0 ? '<p style="font-size: 13px; color: #16a34a; margin-top: 5px;">🎉 You saved ₹499 on delivery!</p>' : ''}
           <div class="total-row grand-total">
             <span>Total Amount:</span>
-            <span>₹${total}</span>
+            <span>₹${escHtml(total)}</span>
           </div>
         </div>
 
         ${customerDetails ? `
           <div class="delivery-info">
             <h3>📦 Delivery Information</h3>
-            <p><strong>Name:</strong> ${customerDetails.fullName || customerName}</p>
-            ${customerDetails.phone ? `<p><strong>Phone:</strong> ${customerDetails.phone}</p>` : ''}
-            ${customerDetails.address ? `<p><strong>Address:</strong> ${customerDetails.address}</p>` : ''}
-            ${customerDetails.city ? `<p><strong>City:</strong> ${customerDetails.city}</p>` : ''}
-            ${customerDetails.state ? `<p><strong>State:</strong> ${customerDetails.state}</p>` : ''}
-            ${customerDetails.pincode ? `<p><strong>Pincode:</strong> ${customerDetails.pincode}</p>` : ''}
+            <p><strong>Name:</strong> ${escHtml(customerDetails.fullName || customerName)}</p>
+            ${customerDetails.phone ? `<p><strong>Phone:</strong> ${escHtml(customerDetails.phone)}</p>` : ''}
+            ${customerDetails.address ? `<p><strong>Address:</strong> ${escHtml(customerDetails.address)}</p>` : ''}
+            ${customerDetails.city ? `<p><strong>City:</strong> ${escHtml(customerDetails.city)}</p>` : ''}
+            ${customerDetails.state ? `<p><strong>State:</strong> ${escHtml(customerDetails.state)}</p>` : ''}
+            ${customerDetails.pincode ? `<p><strong>Pincode:</strong> ${escHtml(customerDetails.pincode)}</p>` : ''}
             <p style="margin-top: 15px; color: #f97316; font-weight: 600;">⏱️ Estimated Delivery: 5-8 days</p>
           </div>
         ` : `
@@ -362,7 +380,7 @@ export async function sendOrderConfirmationEmail(order) {
       from: `"${FROM_NAME}" <${FROM_EMAIL}>`,
       to: customerEmail,
       cc: ADMIN_EMAIL,
-      subject: `Order Confirmed - Presento Treasure #${order.id}`,
+      subject: `Order Confirmed - Homaura #${order.id}`,
       html: getEmailTemplate(content),
     };
 
@@ -392,12 +410,12 @@ export async function sendOutForDeliveryEmail(order) {
     const content = `
       <div class="email-body">
         <h2>🚚 Your Order is Out for Delivery!</h2>
-        <p>Dear ${customerName},</p>
+        <p>Dear ${escHtml(customerName)},</p>
         <p>Great news! Your order is on its way to you.</p>
-        
+
         <div class="order-details">
           <h3>Order Information</h3>
-          <p><strong>Order ID:</strong> #${order.id}</p>
+          <p><strong>Order ID:</strong> #${escHtml(order.id)}</p>
           <p><strong>Status:</strong> Out for Delivery</p>
         </div>
 
@@ -407,14 +425,14 @@ export async function sendOutForDeliveryEmail(order) {
           <p style="margin-top: 15px;">Your package will arrive soon. Please keep your phone handy for delivery updates.</p>
         </div>
 
-        <p>Thank you for choosing Presento Treasure! We hope your gift brings joy to your loved ones.</p>
+        <p>Thank you for choosing Homaura! We hope your items bring joy to your home.</p>
       </div>
     `;
 
     const mailOptions = {
       from: `"${FROM_NAME}" <${FROM_EMAIL}>`,
       to: customerEmail,
-      subject: `Your Order is Out for Delivery! - Presento Treasure #${order.id}`,
+      subject: `Your Order is Out for Delivery! - Homaura #${order.id}`,
       html: getEmailTemplate(content),
     };
 
@@ -441,12 +459,12 @@ export async function sendOrderCancellationEmail(order, cancellationReason = '')
     const content = `
       <div class="email-body">
         <h2>❌ Order Cancelled</h2>
-        <p>Dear ${customerName},</p>
+        <p>Dear ${escHtml(customerName)},</p>
         <p>Your order has been cancelled as requested.</p>
-        
+
         <div class="order-details">
           <h3>Order Information</h3>
-          <p><strong>Order ID:</strong> #${order.id}</p>
+          <p><strong>Order ID:</strong> #${escHtml(order.id)}</p>
           <p><strong>Order Date:</strong> ${new Date(order.createdAt).toLocaleDateString('en-IN', {
       year: 'numeric',
       month: 'long',
@@ -457,7 +475,7 @@ export async function sendOrderCancellationEmail(order, cancellationReason = '')
       month: 'long',
       day: 'numeric'
     })}</p>
-          ${cancellationReason ? `<p><strong>Reason:</strong> ${cancellationReason}</p>` : ''}
+          ${cancellationReason ? `<p><strong>Reason:</strong> ${escHtml(cancellationReason)}</p>` : ''}
         </div>
 
         ${formatProductsTable(order.items)}
@@ -465,7 +483,7 @@ export async function sendOrderCancellationEmail(order, cancellationReason = '')
         <div class="total-section">
           <div class="total-row">
             <span>Order Amount:</span>
-            <span>₹${total}</span>
+            <span>₹${escHtml(total)}</span>
           </div>
         </div>
 
@@ -475,14 +493,14 @@ export async function sendOrderCancellationEmail(order, cancellationReason = '')
         </div>
 
         <p>We're sorry to see this order cancelled. We'd love to serve you again!</p>
-        <p>Browse our collection and find the perfect gift for your loved ones.</p>
+        <p>Browse our collection and find the perfect items for your home.</p>
       </div>
     `;
 
     const mailOptions = {
       from: `"${FROM_NAME}" <${FROM_EMAIL}>`,
       to: customerEmail,
-      subject: `Order Cancelled - Presento Treasure #${order.id}`,
+      subject: `Order Cancelled - Homaura #${order.id}`,
       html: getEmailTemplate(content),
     };
 

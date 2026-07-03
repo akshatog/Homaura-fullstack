@@ -66,13 +66,13 @@
 .product-badge.in-stock {
   background: rgba(255, 255, 255, 0.95);
   color: var(--primary-pink);
-  backdrop-filter: blur(8px);
+
 }
 
 .product-badge.out-of-stock {
   background: rgba(255, 255, 255, 0.95);
   color: var(--gray-500);
-  backdrop-filter: blur(8px);
+
 }
 
 .product-tag-badge {
@@ -89,7 +89,7 @@
   background: rgba(255, 255, 255, 0.95);
   color: #ec4899;
   border: 1.5px solid rgba(236, 72, 153, 0.3);
-  backdrop-filter: blur(12px);
+
   box-shadow: 0 2px 8px rgba(236, 72, 153, 0.15);
   transition: all 0.3s ease;
 }

@@ -40,7 +40,7 @@
     max-width: 1200px;
     margin: 0 auto;
     border: 1px solid rgba(255, 255, 255, 0.5);
-    backdrop-filter: blur(12px);
+
 }
 
 .product-details-card img {
@@ -87,7 +87,7 @@
     margin-left: 0.5rem;
     align-self: flex-start;
     box-shadow: 0 2px 8px rgba(236, 72, 153, 0.15);
-    backdrop-filter: blur(12px);
+
     transition: all 0.3s ease;
 }
 

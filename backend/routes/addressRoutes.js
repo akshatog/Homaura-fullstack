@@ -1,9 +1,8 @@
 import express from "express";
-import { PrismaClient } from "@prisma/client";
+import prisma from "../prisma/client.js";
 import authenticateToken from "../middleware/authMiddleware.js";
 
 const router = express.Router();
-const prisma = new PrismaClient();
 
 router.get("/", authenticateToken, async (req, res) => {
     try {
@@ -25,6 +24,13 @@ router.post("/", authenticateToken, async (req, res) => {
         if (!fullName || !phone || !email || !address || !city || !state || !pincode) {
             return res.status(400).json({ error: "All fields are required" });
         }
+        if (String(fullName).length > 100) return res.status(400).json({ error: "Full name must be 100 characters or fewer" });
+        if (String(phone).length > 20)    return res.status(400).json({ error: "Phone must be 20 characters or fewer" });
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email))) return res.status(400).json({ error: "A valid email is required" });
+        if (String(address).length > 500) return res.status(400).json({ error: "Address must be 500 characters or fewer" });
+        if (String(city).length > 100)    return res.status(400).json({ error: "City must be 100 characters or fewer" });
+        if (String(state).length > 100)   return res.status(400).json({ error: "State must be 100 characters or fewer" });
+        if (!/^\d{1,10}$/.test(String(pincode))) return res.status(400).json({ error: "Pincode must be numeric and up to 10 digits" });
 
         const newAddress = await prisma.address.create({
             data: {
@@ -47,9 +53,19 @@ router.post("/", authenticateToken, async (req, res) => {
 });
 
 router.put("/:id", authenticateToken, async (req, res) => {
+    const addressId = parseInt(req.params.id, 10);
+    if (isNaN(addressId)) return res.status(400).json({ error: "Invalid address ID" });
+
     try {
-        const addressId = parseInt(req.params.id);
         const { fullName, phone, email, address, city, state, pincode } = req.body;
+
+        if (fullName && String(fullName).length > 100) return res.status(400).json({ error: "Full name must be 100 characters or fewer" });
+        if (phone && String(phone).length > 20)        return res.status(400).json({ error: "Phone must be 20 characters or fewer" });
+        if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email))) return res.status(400).json({ error: "A valid email is required" });
+        if (address && String(address).length > 500)   return res.status(400).json({ error: "Address must be 500 characters or fewer" });
+        if (city && String(city).length > 100)         return res.status(400).json({ error: "City must be 100 characters or fewer" });
+        if (state && String(state).length > 100)       return res.status(400).json({ error: "State must be 100 characters or fewer" });
+        if (pincode && !/^\d{1,10}$/.test(String(pincode))) return res.status(400).json({ error: "Pincode must be numeric and up to 10 digits" });
 
         const existingAddress = await prisma.address.findUnique({
             where: { id: addressId },
@@ -80,8 +96,10 @@ router.put("/:id", authenticateToken, async (req, res) => {
 });
 
 router.delete("/:id", authenticateToken, async (req, res) => {
+    const addressId = parseInt(req.params.id, 10);
+    if (isNaN(addressId)) return res.status(400).json({ error: "Invalid address ID" });
+
     try {
-        const addressId = parseInt(req.params.id);
 
         const existingAddress = await prisma.address.findUnique({
             where: { id: addressId },

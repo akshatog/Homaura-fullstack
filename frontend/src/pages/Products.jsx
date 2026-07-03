@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import api from "../utils/api";
 import AddProductForm from "../components/AddProductForm";
 import OrderTrackingModal from "../components/OrderTrackingModal";
@@ -113,6 +113,12 @@ export default function Products() {
           </div>
           {isAdmin && (
             <div className="header-actions">
+              <Link
+                to="/admin/analytics"
+                className="btn-analytics"
+              >
+                📊 Analytics
+              </Link>
               <button
                 onClick={() => setShowAddForm(!showAddForm)}
                 className="btn-add-product"
@@ -176,7 +182,7 @@ export default function Products() {
       </div>
 
       <footer className="admin-footer">
-        <p>&copy; {new Date().getFullYear()} Presento Treasure. All rights reserved.</p>
+        <p>&copy; {new Date().getFullYear()} Homaura. All rights reserved.</p>
       </footer>
     </div>
   );

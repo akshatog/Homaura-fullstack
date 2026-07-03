@@ -44,6 +44,8 @@ model Product {
   stock            Int
   category         String
   imageUrl         String
+  images           String?     @db.Text
+  videoUrl         String?
   badge            String?
   sku              String?
   isFeatured       Boolean     @default(false)

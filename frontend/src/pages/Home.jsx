@@ -15,6 +15,8 @@ import {
 } from "../utils/animationVariants";
 import "../styles/Home.css";
 
+import { optimizeImageUrl } from "../utils/imageUtils";
+
 const getBadgeClass = (badgeText) => {
   if (!badgeText) return "";
   if (badgeText === "Best Seller") return "";
@@ -24,6 +26,7 @@ const getBadgeClass = (badgeText) => {
   if (badgeText === "Trending") return "trending";
   return "";
 };
+
 
 export default function Home() {
   const navigate = useNavigate();
@@ -118,7 +121,7 @@ export default function Home() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            Presento Treasure
+            Homaura
           </motion.p>
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
@@ -231,9 +234,10 @@ export default function Home() {
                             initial="rest"
                           >
                             <motion.img
-                              src={product.imageUrl}
+                              src={optimizeImageUrl(product.imageUrl, 600)}
                               alt={product.name}
                               loading="lazy"
+
                               variants={{
                                 rest: { scale: 1 },
                                 hover: { scale: 1.1 }
@@ -350,7 +354,7 @@ export default function Home() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          Why Choose Presento Treasure?
+          Why Choose Homaura?
         </motion.h2>
         <motion.div
           className="home-why__grid"
@@ -386,7 +390,7 @@ export default function Home() {
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          Let Presento Treasure be part of your next celebration!
+          Let Homaura be part of your next celebration!
         </motion.h2>
         <motion.p
           initial={{ opacity: 0 }}

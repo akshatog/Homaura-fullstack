@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext.jsx";
 import "../styles/Cart.css";
+import { optimizeImageUrl } from "../utils/imageUtils";
 
 export default function CartPage() {
   const { items, updateQuantity, removeFromCart, toggleItemSelection, cartTotal, deliveryCharge, finalTotal, selectedItems } = useCart();
@@ -69,7 +70,7 @@ export default function CartPage() {
                       <span className="checkmark"></span>
                     </label>
                   </div>
-                  <img src={item.imageUrl} alt={item.name} />
+                  <img src={optimizeImageUrl(item.imageUrl, 200)} alt={item.name} />
                   <div className="cart-item__info">
                     <h3>{item.name}</h3>
                     <p>₹{item.price}</p>

@@ -108,7 +108,7 @@
     overflow: hidden;
     max-height: 400px;
     overflow-y: auto;
-    backdrop-filter: blur(12px);
+
 }
 
 .dropdown-section {

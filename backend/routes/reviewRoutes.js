@@ -3,12 +3,15 @@ import prisma from '../prisma/client.js';
 import authenticateToken from '../middleware/authMiddleware.js';
 import reviewMediaUpload from '../utils/reviewMediaUpload.js';
 import cloudinary from '../utils/cloudinary.js';
+import validateFileTypes from '../utils/validateFileTypes.js';
 
 const router = express.Router();
 
 router.get('/can-review/:productId', authenticateToken, async (req, res) => {
+    const productId = parseInt(req.params.productId, 10);
+    if (isNaN(productId)) return res.status(400).json({ error: 'Invalid product ID' });
+
     try {
-        const productId = parseInt(req.params.productId);
         const userId = req.user.userId;
 
         const deliveredOrder = await prisma.order.findFirst({
@@ -44,8 +47,10 @@ router.get('/can-review/:productId', authenticateToken, async (req, res) => {
 });
 
 router.get('/product/:productId', async (req, res) => {
+    const productId = parseInt(req.params.productId, 10);
+    if (isNaN(productId)) return res.status(400).json({ error: 'Invalid product ID' });
+
     try {
-        const productId = parseInt(req.params.productId);
 
         const reviews = await prisma.review.findMany({
             where: { productId },
@@ -111,8 +116,10 @@ router.get('/user', authenticateToken, async (req, res) => {
 });
 
 router.get('/:id', authenticateToken, async (req, res) => {
+    const reviewId = parseInt(req.params.id, 10);
+    if (isNaN(reviewId)) return res.status(400).json({ error: 'Invalid review ID' });
+
     try {
-        const reviewId = parseInt(req.params.id);
         const userId = req.user.userId;
 
         const review = await prisma.review.findUnique({
@@ -150,13 +157,20 @@ router.get('/:id', authenticateToken, async (req, res) => {
 router.post('/', authenticateToken, reviewMediaUpload.fields([
     { name: 'photos', maxCount: 5 },
     { name: 'video', maxCount: 1 }
-]), async (req, res) => {
+]), validateFileTypes({ allowVideos: true }), async (req, res) => {
     try {
         const { productId, rating, comment } = req.body;
         const userId = req.user.userId;
 
+        const parsedProductId = parseInt(productId, 10);
+        if (!productId || isNaN(parsedProductId)) {
+            return res.status(400).json({ error: 'A valid product ID is required' });
+        }
         if (!rating || rating < 1 || rating > 5) {
             return res.status(400).json({ error: 'Rating must be between 1 and 5' });
+        }
+        if (comment && String(comment).length > 2000) {
+            return res.status(400).json({ error: 'Comment must be 2000 characters or fewer' });
         }
 
         const deliveredOrder = await prisma.order.findFirst({
@@ -165,7 +179,7 @@ router.post('/', authenticateToken, reviewMediaUpload.fields([
                 status: 'delivered',
                 items: {
                     some: {
-                        productId: parseInt(productId)
+                        productId: parsedProductId
                     }
                 }
             }
@@ -236,7 +250,7 @@ router.post('/', authenticateToken, reviewMediaUpload.fields([
         const review = await prisma.review.create({
             data: {
                 userId,
-                productId: parseInt(productId),
+                productId: parsedProductId,
                 rating: parseInt(rating),
                 comment: comment || null,
                 photos: photoUrls.length > 0 ? JSON.stringify(photoUrls) : null,
@@ -270,11 +284,17 @@ router.post('/', authenticateToken, reviewMediaUpload.fields([
 router.put('/:id', authenticateToken, reviewMediaUpload.fields([
     { name: 'photos', maxCount: 5 },
     { name: 'video', maxCount: 1 }
-]), async (req, res) => {
+]), validateFileTypes({ allowVideos: true }), async (req, res) => {
+    const reviewId = parseInt(req.params.id, 10);
+    if (isNaN(reviewId)) return res.status(400).json({ error: 'Invalid review ID' });
+
     try {
-        const reviewId = parseInt(req.params.id);
         const { rating, comment, removePhotos, removeVideo } = req.body;
         const userId = req.user.userId;
+
+        if (comment && String(comment).length > 2000) {
+            return res.status(400).json({ error: 'Comment must be 2000 characters or fewer' });
+        }
 
         if (rating && (rating < 1 || rating > 5)) {
             return res.status(400).json({ error: 'Rating must be between 1 and 5' });
@@ -386,8 +406,10 @@ router.put('/:id', authenticateToken, reviewMediaUpload.fields([
 });
 
 router.delete('/:id', authenticateToken, async (req, res) => {
+    const reviewId = parseInt(req.params.id, 10);
+    if (isNaN(reviewId)) return res.status(400).json({ error: 'Invalid review ID' });
+
     try {
-        const reviewId = parseInt(req.params.id);
         const userId = req.user.userId;
 
         const existingReview = await prisma.review.findUnique({

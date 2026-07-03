@@ -36,7 +36,7 @@ export default function Signup() {
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <h2>Join Presento Treasure💞</h2>
+        <h2>Join Homaura💞</h2>
         <p className="subtitle">Create your account</p>
 
         <form onSubmit={handleSubmit}>

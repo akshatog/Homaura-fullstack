@@ -3,6 +3,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 import api from "../utils/api";
 import "../styles/ProductCard.css";
 
+import { optimizeImageUrl } from "../utils/imageUtils";
+
 function ProductCard({ product, onOrderClick, loading, isAdmin, onProductDeleted, onStockUpdated }) {
   const [quantity, setQuantity] = useState(1);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -98,10 +100,11 @@ function ProductCard({ product, onOrderClick, loading, isAdmin, onProductDeleted
     <div className="product-card-user">
       <div className="product-image-wrapper">
         <img
-          src={product.imageUrl}
+          src={optimizeImageUrl(product.imageUrl, 400)}
           alt={product.name}
           className="product-image"
           loading="lazy"
+
         />
         <div className={`product-badge ${isOutOfStock ? "out-of-stock" : "in-stock"}`}>
           {isOutOfStock ? "Out of Stock" : "In Stock"}

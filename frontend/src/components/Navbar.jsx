@@ -82,7 +82,8 @@ export default function Navbar() {
         </div>
 
         <div className="pt-navbar__brand" onClick={() => navigate("/")}>
-          Presento Treasure
+          <img src="/images/logo.png" alt="Homaura Logo" className="navbar-logo" style={{ height: '40px', marginRight: '10px', verticalAlign: 'middle' }} />
+          Homaura
         </div>
 
         <div className="pt-navbar__links">
@@ -125,7 +126,10 @@ export default function Navbar() {
 
       <div className={`pt-navbar__mobile-menu ${mobileMenuOpen ? 'active' : ''}`}>
         <div className="pt-navbar__mobile-header">
-          <div className="pt-navbar__brand">Presento Treasure</div>
+          <div className="pt-navbar__brand">
+            <img src="/images/logo.png" alt="Homaura Logo" className="navbar-logo" style={{ height: '30px', marginRight: '10px', verticalAlign: 'middle' }} />
+            Homaura
+          </div>
           <button className="pt-navbar__mobile-close" onClick={closeMobileMenu} aria-label="Close menu">
             ×
           </button>

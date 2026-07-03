@@ -44,7 +44,7 @@
   text-align: center;
   padding: 6rem 2rem;
   background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(12px);
+
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
   display: flex;
@@ -281,7 +281,7 @@
   border: 1px solid rgba(255, 255, 255, 0.5);
   position: sticky;
   top: calc(var(--header-height) + 2rem);
-  backdrop-filter: blur(12px);
+
 }
 
 .cart-summary__row {

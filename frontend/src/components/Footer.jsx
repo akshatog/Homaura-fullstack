@@ -6,7 +6,8 @@ export default function Footer() {
         <footer className="pt-footer">
             <div className="container pt-footer__content">
                 <div className="pt-footer__brand">
-                    <h3>Presento Treasure</h3>
+                    <img src="/images/logo.png" alt="Homaura Logo" style={{ height: '50px', marginBottom: '10px' }} />
+                    <h3>Homaura</h3>
                     <p>Pastel-perfect keepsakes for heartfelt gifting.</p>
                 </div>
 
@@ -31,7 +32,7 @@ export default function Footer() {
 
             <div className="pt-footer__bottom">
                 <div className="container">
-                    <p>&copy; {new Date().getFullYear()} Presento Treasure. All rights reserved.</p>
+                    <p>&copy; {new Date().getFullYear()} Homaura. All rights reserved.</p>
                 </div>
             </div>
         </footer>

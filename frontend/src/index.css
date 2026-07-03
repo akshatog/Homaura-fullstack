@@ -195,7 +195,7 @@ a {
   background: rgba(255, 255, 255, 0.5);
   border: 1px solid var(--gray-300);
   color: var(--gray-700);
-  backdrop-filter: blur(4px);
+
 }
 
 .btn-outline:hover {
@@ -236,8 +236,8 @@ textarea:focus {
 
 .glass-card {
   background: var(--glass-bg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+
+
   border: 1px solid var(--glass-border);
   box-shadow: var(--glass-shadow);
   border-radius: var(--radius-lg);

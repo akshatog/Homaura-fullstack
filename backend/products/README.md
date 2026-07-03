@@ -2,7 +2,7 @@
 
 ## Overview
 
-Centralized product management system for Presento Treasure. All product operations are handled through a single, maintainable architecture.
+Centralized product management system for Homaura. All product operations are handled through a single, maintainable architecture.
 
 ## Structure
 

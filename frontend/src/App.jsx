@@ -15,6 +15,7 @@ import ProductDetails from "./pages/ProductDetails.jsx";
 import Checkout from "./pages/Checkout.jsx";
 import AppLayout from "./components/AppLayout.jsx";
 import ProtectedRoute, { AdminRoute } from "./components/ProtectedRoute.jsx";
+import Analytics from "./pages/Analytics.jsx";
 
 function App() {
   return (
@@ -36,6 +37,15 @@ function App() {
         element={
           <AdminRoute>
             <EditProduct />
+          </AdminRoute>
+        }
+      />
+
+      <Route
+        path="/admin/analytics"
+        element={
+          <AdminRoute>
+            <Analytics />
           </AdminRoute>
         }
       />

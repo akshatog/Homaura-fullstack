@@ -2,6 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { useCart } from "../context/CartContext.jsx";
 import "../styles/ProductCardUser.css";
+import { optimizeImageUrl } from "../utils/imageUtils";
 
 function ProductCardUser({
   product,
@@ -50,7 +51,7 @@ function ProductCardUser({
         initial="rest"
       >
         <motion.img
-          src={product.imageUrl}
+          src={optimizeImageUrl(product.imageUrl, 400)}
           alt={product.name}
           className="product-image"
           loading="lazy"

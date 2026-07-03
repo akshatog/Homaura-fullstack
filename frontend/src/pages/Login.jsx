@@ -67,7 +67,7 @@ export default function Login() {
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <h2>Welcome To Presento Treasure💞</h2>
+        <h2>Welcome To Homaura💞</h2>
         <p className="subtitle">Login to your account</p>
 
         <form onSubmit={handleSubmit}>

@@ -18,11 +18,14 @@ import ProtectedRoute, { AdminRoute } from "./components/ProtectedRoute.jsx";
 import Analytics from "./pages/Analytics.jsx";
 import AboutUs from "./pages/AboutUs.jsx";
 import Inspiration from "./pages/Inspiration.jsx";
+import ScrollToTop from "./components/ScrollToTop.jsx";
 
 function App() {
   return (
-    <Routes>
-      <Route path="/login" element={<Login />} />
+    <>
+      <ScrollToTop />
+      <Routes>
+        <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
 
       <Route element={<AppLayout />}>
@@ -122,6 +125,7 @@ function App() {
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
+    </>
   );
 }
 

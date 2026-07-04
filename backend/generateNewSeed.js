@@ -67,7 +67,7 @@ async function main() {
   await prisma.product.deleteMany({});
   
   const products = generateProducts();
-  console.log(`Seeding ${products.length} new unique products...`);
+  console.log(`Seeding ${products.length} new unique products...`); 
   
   const result = await prisma.product.createMany({
     data: products,

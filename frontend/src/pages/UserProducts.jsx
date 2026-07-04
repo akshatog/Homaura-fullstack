@@ -33,6 +33,14 @@ export default function UserProducts({ defaultTab = "products" }) {
 
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [priceRange, setPriceRange] = useState([299, 49999]);
+  const [minPriceInput, setMinPriceInput] = useState("299");
+  const [maxPriceInput, setMaxPriceInput] = useState("49999");
+
+  useEffect(() => {
+    setMinPriceInput(priceRange[0].toString());
+    setMaxPriceInput(priceRange[1].toString());
+  }, [priceRange]);
+
   const [sortBy, setSortBy] = useState("Featured");
   const [showMobileFilters, setShowMobileFilters] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -383,15 +391,17 @@ export default function UserProducts({ defaultTab = "products" }) {
                       <span className="price-input-label">Min</span>
                       <input
                         type="number"
-                        value={priceRange[0]}
-                        onChange={(e) => {
-                          const newMin = parseInt(e.target.value) || 299;
-                          if (newMin < priceRange[1]) {
-                            setPriceRange([newMin, priceRange[1]]);
-                          }
+                        value={minPriceInput}
+                        onChange={(e) => setMinPriceInput(e.target.value)}
+                        onBlur={() => {
+                          let newMin = parseInt(minPriceInput);
+                          if (isNaN(newMin)) newMin = 0;
+                          if (newMin > priceRange[1]) newMin = priceRange[1];
+                          setPriceRange([newMin, priceRange[1]]);
                         }}
-                        min="299"
-                        max={priceRange[1]}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') e.target.blur();
+                        }}
                         placeholder="299"
                       />
                     </div>
@@ -400,15 +410,17 @@ export default function UserProducts({ defaultTab = "products" }) {
                       <span className="price-input-label">Max</span>
                       <input
                         type="number"
-                        value={priceRange[1]}
-                        onChange={(e) => {
-                          const newMax = parseInt(e.target.value) || 49999;
-                          if (newMax > priceRange[0]) {
-                            setPriceRange([priceRange[0], newMax]);
-                          }
+                        value={maxPriceInput}
+                        onChange={(e) => setMaxPriceInput(e.target.value)}
+                        onBlur={() => {
+                          let newMax = parseInt(maxPriceInput);
+                          if (isNaN(newMax)) newMax = 49999;
+                          if (newMax < priceRange[0]) newMax = priceRange[0];
+                          setPriceRange([priceRange[0], newMax]);
                         }}
-                        min={priceRange[0]}
-                        max="49999"
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') e.target.blur();
+                        }}
                         placeholder="49999"
                       />
                     </div>
